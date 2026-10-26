@@ -1,0 +1,61 @@
+# Environment files containing sensitive credentials
+.env
+.env.*
+!.env.example
+
+# Secret keys and credential files
+*.pem
+*.key
+*.pkcs12
+*.pfx
+*.p12
+*service_account*.json
+*service-account*.json
+*credentials*.json
+client_secret*.json
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# Python cache and build artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+/build/
+
+# Testing & Linting caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local Data storage (raw downloads, parquet, checkpoints, CSVs)
+/data/
+*.parquet
+!tests/fixtures/*.parquet
+!hf_space/data/*.parquet
+
+# MLflow run artifacts
+mlruns/
+mlartifacts/
+mlflow.db
+*.db
+*.sqlite
+
+# dbt artifacts
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+dbt/.user.yml
+
+# IDE / OS specific
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
