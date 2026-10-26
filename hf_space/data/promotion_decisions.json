@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-10-28T16:11:09.025398+00:00",
+  "status": "completed",
+  "promotion_margin": 0.01,
+  "demonstration_paths": {
+    "path_a_worse_candidate": {
+      "description": "Deliberately degraded candidate with restricted vocabulary & classes",
+      "training_dataset_size": 976,
+      "metric_evaluated": "top_1_accuracy",
+      "champion_metric": 0.6973,
+      "candidate_metric": 0.1814,
+      "delta": -0.5159,
+      "margin_required": 0.01,
+      "decision": "REJECTED_KEPT_CHAMPION",
+      "promoted": false,
+      "mlflow_run_id": "8856ca99dffd4fcba8f8acd0badacdc8"
+    },
+    "path_b_better_candidate": {
+      "description": "Retrained on data that grew since champion was trained (expanded by 786 tickets)",
+      "initial_champion_training_size": 976,
+      "grown_retraining_dataset_size": 1762,
+      "growth_tickets_added": 786,
+      "metric_evaluated": "top_1_accuracy",
+      "champion_metric": 0.6973,
+      "candidate_metric": 0.8,
+      "delta": 0.1027,
+      "margin_required": 0.01,
+      "decision": "PROMOTED_CHAMPION",
+      "promoted": true,
+      "mlflow_run_id": "4d595f266435446186d059281ede1873"
+    }
+  }
+}

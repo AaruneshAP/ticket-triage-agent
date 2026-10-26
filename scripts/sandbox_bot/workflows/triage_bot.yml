@@ -1,0 +1,36 @@
+name: Sandbox Issue Triage Bot
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out agent repository
+        uses: actions/checkout@v4
+        with:
+          repository: AaruneshAP/ticket-triage-agent
+          ref: master
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install requests python-dotenv
+
+      - name: Run Guarded Triage Bot
+        env:
+          GITHUB_SANDBOX_REPO: ${{ github.repository }}
+          GITHUB_SANDBOX_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/sandbox_bot/action.py
+
