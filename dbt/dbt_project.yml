@@ -1,0 +1,34 @@
+name: "ticket_triage_dbt"
+version: "1.0.0"
+config-version: 2
+
+profile: "ticket_triage_databricks"
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  ticket_triage_dbt:
+    bronze:
+      +schema: bronze
+      +materialized: view
+    silver:
+      +schema: silver
+      +materialized: view
+      stg_issues:
+        +materialized: incremental
+        +unique_key: ticket_number
+    gold:
+      +schema: gold
+      +materialized: table
+      fct_tickets:
+        +materialized: incremental
+        +unique_key: ticket_number

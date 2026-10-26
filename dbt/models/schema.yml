@@ -1,0 +1,95 @@
+version: 2
+
+sources:
+  - name: databricks_raw
+    schema: "{{ env_var('DATABRICKS_RAW_SCHEMA', 'raw') }}"
+    tables:
+      - name: raw_issues
+        description: "Raw landing table loaded by Python loader from interim issues parquet"
+        columns:
+          - name: ticket_number
+            tests:
+              - duplicate_tolerance:
+                  arguments:
+                    max_duplicates: 0
+      - name: raw_comments
+        description: "Raw landing table loaded by Python loader from interim comments parquet"
+        columns:
+          - name: comment_id
+            tests:
+              - duplicate_tolerance:
+                  arguments:
+                    max_duplicates: 0
+
+models:
+  - name: raw_issues
+    description: "Bronze raw issues view"
+    columns:
+      - name: ticket_number
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_issues')
+                field: ticket_number
+
+  - name: raw_comments
+    description: "Bronze raw comments view"
+    columns:
+      - name: comment_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_issues
+    description: "Silver staging issues table (incremental)"
+    columns:
+      - name: ticket_number
+        tests:
+          - unique
+          - not_null
+      - name: state
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['open', 'closed']
+
+  - name: stg_form_fields
+    description: "Silver staging form parsed fields"
+    columns:
+      - name: ticket_number
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_tickets
+    description: "Gold ticket analytical and feature store table (incremental)"
+    columns:
+      - name: ticket_number
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_issues')
+                field: ticket_number
+      - name: state
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['open', 'closed']
+
+  - name: mart_weekly_volume
+    description: "Weekly ticket volume and resolution speed mart"
+    columns:
+      - name: week_start
+        tests:
+          - not_null
+
+  - name: mart_model_monitoring
+    description: "Daily feature drift and model monitoring mart"
+    columns:
+      - name: date_day
+        tests:
+          - not_null
