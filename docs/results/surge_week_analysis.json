@@ -1,0 +1,135 @@
+{
+  "surge_week": {
+    "window": "2026-10-05 to 2026-10-11",
+    "stats": {
+      "total_tickets": 344,
+      "closed_tickets": 210,
+      "closure_rate": 0.6105,
+      "unique_authors": 243,
+      "top_3_authors": {
+        "erwindouna": 87,
+        "github-actions[bot]": 6,
+        "HuisAutomatisering": 3
+      },
+      "top_3_authors_share": 0.2791,
+      "author_types": {
+        "User": 338,
+        "Bot": 6
+      },
+      "author_association": {
+        "NONE": 228,
+        "MEMBER": 88,
+        "CONTRIBUTOR": 28
+      },
+      "closed_by_bot_count": 7,
+      "closed_by_bot_share": 0.0203,
+      "closure_reasons": {
+        "completed": 178,
+        "not_planned": 21,
+        "duplicate": 11
+      },
+      "closure_reason_share_of_closed": {
+        "completed": 0.8476,
+        "not_planned": 0.1,
+        "duplicate": 0.0524
+      },
+      "time_to_close_days": {
+        "p25": 0.22,
+        "median_p50": 0.55,
+        "p75": 2.66,
+        "p90": 6.46,
+        "mean": 2.13
+      },
+      "top_title_prefixes": {
+        "advance": 48,
+        "use": 16,
+        "assert": 15,
+        "unifi": 10,
+        "translate": 7
+      }
+    },
+    "example_advance_titles": [
+      "Advance time instead of refreshing coordinators directly in airobot tests",
+      "Advance time instead of refreshing coordinators directly in atag tests",
+      "Advance time instead of refreshing coordinators directly in axle_energy tests",
+      "Advance time instead of refreshing coordinators directly in blebox tests",
+      "Advance time instead of refreshing coordinators directly in blink tests",
+      "Advance time instead of refreshing coordinators directly in duco tests",
+      "Advance time instead of refreshing coordinators directly in elgato tests",
+      "Advance time instead of refreshing coordinators directly in esphome tests",
+      "Advance time instead of refreshing coordinators directly in eurotronic_cometblue tests",
+      "Advance time instead of refreshing coordinators directly in flexit tests"
+    ],
+    "window_alignment_confirmation": "Confirmed: The surge window (2026-10-05 to 2026-10-11, Mon-Sun) matches the intake week labeled 2026-10-06. Both definitions contain exactly 344 tickets and 210 closed tickets."
+  },
+  "comparison_weeks": {
+    "window": "2026-09-15 to 2026-10-18 (excluding surge week)",
+    "stats": {
+      "total_tickets": 753,
+      "closed_tickets": 339,
+      "closure_rate": 0.4502,
+      "unique_authors": 641,
+      "top_3_authors": {
+        "frenck": 24,
+        "tr4nt0r": 15,
+        "github-actions[bot]": 13
+      },
+      "top_3_authors_share": 0.0691,
+      "author_types": {
+        "User": 740,
+        "Bot": 13
+      },
+      "author_association": {
+        "NONE": 622,
+        "CONTRIBUTOR": 99,
+        "MEMBER": 32
+      },
+      "closed_by_bot_count": 18,
+      "closed_by_bot_share": 0.0239,
+      "closure_reasons": {
+        "completed": 297,
+        "not_planned": 29,
+        "duplicate": 13
+      },
+      "closure_reason_share_of_closed": {
+        "completed": 0.8761,
+        "not_planned": 0.0855,
+        "duplicate": 0.0383
+      },
+      "time_to_close_days": {
+        "p25": 0.71,
+        "median_p50": 2.95,
+        "p75": 9.4,
+        "p90": 19.15,
+        "mean": 6.46
+      },
+      "top_title_prefixes": {
+        "tuya": 17,
+        "add": 16,
+        "remove": 14,
+        "matter": 11,
+        "raise": 10
+      }
+    }
+  },
+  "fixed_horizon_14d_reevaluation": {
+    "full_cohort": {
+      "sample_size": 434,
+      "closed_within_14d": 255,
+      "rate": 0.5876,
+      "roc_auc": 0.4621
+    },
+    "excluding_surge_week": {
+      "sample_size": 90,
+      "closed_within_14d": 49,
+      "rate": 0.5444,
+      "roc_auc": 0.4983,
+      "roc_auc_95_ci": [
+        0.3766,
+        0.6207
+      ]
+    },
+    "verdict": "Excluding the surge week, ROC-AUC is 0.4983 (95% CI [0.3766, 0.6207]), which spans chance 0.50."
+  },
+  "root_cause_statement": "The underlying cause of the intake surge and closure patterns was not investigated."
+}

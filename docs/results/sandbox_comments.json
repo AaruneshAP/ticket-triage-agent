@@ -1,0 +1,78 @@
+{
+  "repository": "AaruneshAP/ticket-triage-sandbox",
+  "issue_count": 8,
+  "comments": [
+    {
+      "id": 6491923678,
+      "author": "AaruneshAP",
+      "created_at": "2026-10-29T08:35:27Z",
+      "issue_number": 1,
+      "body_length": 314,
+      "sha256": "b2fdf693de24c03764b9beafe866a76a38c2bfc1ea925fe3144800ca2c9b1f6f",
+      "resolution_regex_match": false
+    },
+    {
+      "id": 6494310787,
+      "author": "AaruneshAP",
+      "created_at": "2026-10-29T10:33:12Z",
+      "issue_number": 2,
+      "body_length": 254,
+      "sha256": "84979adc8273ed4d6fa22e2a118ca98af946f9a5efb591a7536d02757e9cad37",
+      "resolution_regex_match": false
+    },
+    {
+      "id": 6494328057,
+      "author": "AaruneshAP",
+      "created_at": "2026-10-29T10:34:00Z",
+      "issue_number": 3,
+      "body_length": 254,
+      "sha256": "84979adc8273ed4d6fa22e2a118ca98af946f9a5efb591a7536d02757e9cad37",
+      "resolution_regex_match": false
+    },
+    {
+      "id": 6495564684,
+      "author": "AaruneshAP",
+      "created_at": "2026-10-29T11:35:07Z",
+      "issue_number": 4,
+      "body_length": 254,
+      "sha256": "84979adc8273ed4d6fa22e2a118ca98af946f9a5efb591a7536d02757e9cad37",
+      "resolution_regex_match": false
+    },
+    {
+      "id": 6497639315,
+      "author": "AaruneshAP",
+      "created_at": "2026-10-29T13:12:50Z",
+      "issue_number": 5,
+      "body_length": 657,
+      "sha256": "504e837b43c63ab836e149c5c7fce965cfbf591492c1862714b34a60dc86fa44",
+      "resolution_regex_match": false
+    },
+    {
+      "id": 6500918221,
+      "author": "AaruneshAP",
+      "created_at": "2026-10-29T15:28:08Z",
+      "issue_number": 6,
+      "body_length": 281,
+      "sha256": "06cc0801e48822c82067ed71b4e013111cab5c50acf25726ec053a1cd91a4693",
+      "resolution_regex_match": false
+    },
+    {
+      "id": 6500952785,
+      "author": "AaruneshAP",
+      "created_at": "2026-10-29T15:29:30Z",
+      "issue_number": 7,
+      "body_length": 381,
+      "sha256": "975f5e9faa11eb86b8e9de9f5d7f436d7810b3f6f57ecf5f8981287d3fb911cf",
+      "resolution_regex_match": false
+    },
+    {
+      "id": 6501039538,
+      "author": "AaruneshAP",
+      "created_at": "2026-10-29T15:32:51Z",
+      "issue_number": 8,
+      "body_length": 978,
+      "sha256": "97ebbe397523f2c6b24f309340f6918eaa0ad94e042da8c0f320fdca6045e177",
+      "resolution_regex_match": false
+    }
+  ]
+}

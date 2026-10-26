@@ -1,0 +1,77 @@
+{
+  "cohort_14d": {
+    "window_start": "2026-10-02 05:25:14+00:00",
+    "window_end": "2026-10-12 05:13:28+00:00",
+    "total_tickets": 434,
+    "closed_within_14d": 255,
+    "rate_within_14d": 0.5876,
+    "overall_closed": 264,
+    "overall_closed_rate": 0.6083
+  },
+  "cohort_30d": {
+    "window_start": "2026-09-16 05:16:02+00:00",
+    "window_end": "2026-09-26 04:46:35+00:00",
+    "total_tickets": 212,
+    "closed_within_30d": 97,
+    "rate_within_30d": 0.4575,
+    "overall_closed": 100,
+    "overall_closed_rate": 0.4717
+  },
+  "monthly_closure_rates": {
+    "2026-05": {
+      "total_tickets": 11,
+      "closed_total": 5,
+      "closure_rate": 0.4545,
+      "closed_within_14d": 0,
+      "rate_14d": 0.0,
+      "closed_within_30d": 0,
+      "rate_30d": 0.0
+    },
+    "2026-06": {
+      "total_tickets": 17,
+      "closed_total": 11,
+      "closure_rate": 0.6471,
+      "closed_within_14d": 0,
+      "rate_14d": 0.0,
+      "closed_within_30d": 0,
+      "rate_30d": 0.0
+    },
+    "2026-07": {
+      "total_tickets": 44,
+      "closed_total": 17,
+      "closure_rate": 0.3864,
+      "closed_within_14d": 0,
+      "rate_14d": 0.0,
+      "closed_within_30d": 0,
+      "rate_30d": 0.0
+    },
+    "2026-08": {
+      "total_tickets": 969,
+      "closed_total": 599,
+      "closure_rate": 0.6182,
+      "closed_within_14d": 326,
+      "rate_14d": 0.3364,
+      "closed_within_30d": 475,
+      "rate_30d": 0.4902
+    },
+    "2026-09": {
+      "total_tickets": 791,
+      "closed_total": 398,
+      "closure_rate": 0.5032,
+      "closed_within_14d": 285,
+      "rate_14d": 0.3603,
+      "closed_within_30d": 369,
+      "rate_30d": 0.4665
+    },
+    "2026-10": {
+      "total_tickets": 1033,
+      "closed_total": 440,
+      "closure_rate": 0.4259,
+      "closed_within_14d": 431,
+      "rate_14d": 0.4172,
+      "closed_within_30d": 440,
+      "rate_30d": 0.4259
+    }
+  },
+  "note": "The root cause of closure rate variation across cohorts was not investigated."
+}

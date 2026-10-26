@@ -1,0 +1,78 @@
+{
+  "model_30d_artifact_path": "models\\fixed_horizon_30d.joblib",
+  "model_14d_artifact_path": "models\\fixed_horizon_14d.joblib",
+  "cohort_definition": "2026-09-16 05:16:02Z to 2026-09-26 04:46:35Z (N=212)",
+  "first_10_predictions": [
+    {
+      "ticket_number": 182365,
+      "created_at": "2026-09-16 05:16:02+00:00",
+      "p30_raw_pred": 0.157041,
+      "p14_raw_pred": 0.581773,
+      "absolute_diff": 0.424732
+    },
+    {
+      "ticket_number": 182373,
+      "created_at": "2026-09-16 06:09:49+00:00",
+      "p30_raw_pred": 0.267964,
+      "p14_raw_pred": 0.051189,
+      "absolute_diff": 0.216775
+    },
+    {
+      "ticket_number": 182381,
+      "created_at": "2026-09-16 08:37:39+00:00",
+      "p30_raw_pred": 0.238925,
+      "p14_raw_pred": 0.072099,
+      "absolute_diff": 0.166826
+    },
+    {
+      "ticket_number": 182387,
+      "created_at": "2026-09-16 09:39:44+00:00",
+      "p30_raw_pred": 0.582147,
+      "p14_raw_pred": 0.849385,
+      "absolute_diff": 0.267238
+    },
+    {
+      "ticket_number": 182391,
+      "created_at": "2026-09-16 11:01:34+00:00",
+      "p30_raw_pred": 0.127131,
+      "p14_raw_pred": 0.156588,
+      "absolute_diff": 0.029456
+    },
+    {
+      "ticket_number": 182392,
+      "created_at": "2026-09-16 11:06:49+00:00",
+      "p30_raw_pred": 0.737394,
+      "p14_raw_pred": 0.352883,
+      "absolute_diff": 0.384511
+    },
+    {
+      "ticket_number": 182397,
+      "created_at": "2026-09-16 11:47:04+00:00",
+      "p30_raw_pred": 0.444077,
+      "p14_raw_pred": 0.209877,
+      "absolute_diff": 0.234199
+    },
+    {
+      "ticket_number": 182399,
+      "created_at": "2026-09-16 12:34:03+00:00",
+      "p30_raw_pred": 0.230588,
+      "p14_raw_pred": 0.577739,
+      "absolute_diff": 0.347151
+    },
+    {
+      "ticket_number": 182400,
+      "created_at": "2026-09-16 12:37:40+00:00",
+      "p30_raw_pred": 0.248215,
+      "p14_raw_pred": 0.361742,
+      "absolute_diff": 0.113527
+    },
+    {
+      "ticket_number": 182405,
+      "created_at": "2026-09-16 13:34:59+00:00",
+      "p30_raw_pred": 0.295686,
+      "p14_raw_pred": 0.465111,
+      "absolute_diff": 0.169424
+    }
+  ],
+  "confirmation": "Confirmed: The 30-day model produces distinct predictions with an average absolute difference of > 0.23 from the 14-day model on the identical input rows."
+}

@@ -1,0 +1,192 @@
+{
+  "task_definition": {
+    "description": "Predict integration label from clean_text_for_label (form field stripped)",
+    "num_classes": 26,
+    "classes": [
+      "alexa_devices",
+      "esphome",
+      "fritz",
+      "http",
+      "hue",
+      "lg_thinq",
+      "matter",
+      "midea",
+      "miele",
+      "mqtt",
+      "netatmo",
+      "other",
+      "overkiz",
+      "reolink",
+      "roborock",
+      "shelly",
+      "smartthings",
+      "template",
+      "tplink",
+      "tuya",
+      "unifi",
+      "unifiprotect",
+      "volvo",
+      "webostv",
+      "zha",
+      "zwave_js"
+    ],
+    "target_labels_count": 26,
+    "class_selection_split": "train_df only (created_at <= 2026-08-27T05:00:47Z)",
+    "majority_label_from_train": "matter",
+    "leakage_guard_applied": true,
+    "leakage_guard_rule": "Integration causing the issue field stripped before feature building"
+  },
+  "share_of_other": {
+    "train": {
+      "total_tickets": 976,
+      "labeled_tickets": 798,
+      "other_count": 582,
+      "other_share_of_labeled": 0.7293,
+      "other_share_of_all": 0.5963
+    },
+    "validation": {
+      "total_tickets": 786,
+      "labeled_tickets": 580,
+      "other_count": 385,
+      "other_share_of_labeled": 0.6638,
+      "other_share_of_all": 0.4898
+    },
+    "test": {
+      "total_tickets": 1150,
+      "labeled_tickets": 915,
+      "other_count": 702,
+      "other_share_of_labeled": 0.7672,
+      "other_share_of_all": 0.6104
+    }
+  },
+  "validation_metrics": {
+    "split_name": "Validation Split (Tuning)",
+    "sample_size": 580,
+    "top_1_accuracy": 0.8655,
+    "top_3_accuracy": 0.981,
+    "macro_f1": 0.8316,
+    "majority_baseline_accuracy": 0.0379,
+    "majority_baseline_macro_f1": 0.0028
+  },
+  "test_metrics_strictly_out_of_sample": {
+    "split_name": "Strictly Out-of-Sample Test",
+    "sample_size": 915,
+    "total_tickets_in_split": 1150,
+    "top_1_accuracy": 0.8,
+    "top_1_95_ci": [
+      0.776,
+      0.8262
+    ],
+    "top_3_accuracy": 0.9716,
+    "top_3_95_ci": [
+      0.9606,
+      0.9825
+    ],
+    "macro_f1": 0.6443,
+    "macro_f1_95_ci": [
+      0.5729,
+      0.69
+    ],
+    "always_other_baseline": {
+      "accuracy": 0.7672,
+      "macro_f1": 0.0334
+    },
+    "majority_class_baseline": {
+      "majority_class": "matter",
+      "accuracy": 0.0219,
+      "macro_f1": 0.0016
+    },
+    "non_other_test_tickets": {
+      "sample_size": 213,
+      "top_1_accuracy": 0.8357,
+      "top_3_accuracy": 0.9343,
+      "recall_routed_to_specific_class": 0.8826,
+      "share_of_true_other_wrongly_assigned_to_specific_class": 0.2108
+    }
+  },
+  "top_10_classes_by_support": {
+    "other": {
+      "support": 702,
+      "precision": 0.9568,
+      "recall": 0.7892,
+      "f1_score": 0.8649
+    },
+    "matter": {
+      "support": 20,
+      "precision": 0.72,
+      "recall": 0.9,
+      "f1_score": 0.8
+    },
+    "reolink": {
+      "support": 17,
+      "precision": 0.6,
+      "recall": 0.8824,
+      "f1_score": 0.7143
+    },
+    "esphome": {
+      "support": 14,
+      "precision": 0.75,
+      "recall": 0.8571,
+      "f1_score": 0.8
+    },
+    "tuya": {
+      "support": 14,
+      "precision": 0.7,
+      "recall": 1.0,
+      "f1_score": 0.8235
+    },
+    "unifi": {
+      "support": 14,
+      "precision": 0.5,
+      "recall": 0.6429,
+      "f1_score": 0.5625
+    },
+    "alexa_devices": {
+      "support": 13,
+      "precision": 0.9091,
+      "recall": 0.7692,
+      "f1_score": 0.8333
+    },
+    "shelly": {
+      "support": 13,
+      "precision": 0.6667,
+      "recall": 0.9231,
+      "f1_score": 0.7742
+    },
+    "zwave_js": {
+      "support": 12,
+      "precision": 0.5,
+      "recall": 0.5833,
+      "f1_score": 0.5385
+    },
+    "midea": {
+      "support": 11,
+      "precision": 0.8182,
+      "recall": 0.8182,
+      "f1_score": 0.8182
+    }
+  },
+  "figures_reconciliation": [
+    {
+      "figure": "70.0% Top-1",
+      "class_count": 125,
+      "population": "Unpruned raw components in validation",
+      "split": "Validation (N=786)",
+      "status": "Exploratory baseline on all unpruned raw integration strings"
+    },
+    {
+      "figure": "71.3% Top-1",
+      "class_count": 26,
+      "population": "Closed tickets evaluated across rolling monitoring windows",
+      "split": "Rolling monitoring cohort (2026-09-28 to 2026-10-12, N=352)",
+      "status": "Rolling production monitoring cohort"
+    },
+    {
+      "figure": "80.0% Top-1",
+      "class_count": 26,
+      "population": "Labeled tickets (integration_clean != 'unlabeled')",
+      "split": "Strictly Out-of-Sample Test (2026-09-26 to 2026-10-26, N=915)",
+      "status": "Headline out-of-sample benchmark"
+    }
+  ]
+}

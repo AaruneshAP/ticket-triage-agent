@@ -1,0 +1,54 @@
+{
+  "prevalence": {
+    "training": {
+      "total_closed": 582,
+      "positives": 95,
+      "prevalence": 0.1632
+    },
+    "validation": {
+      "total_closed": 411,
+      "positives": 63,
+      "prevalence": 0.1533
+    },
+    "test": {
+      "total_closed": 496,
+      "positives": 72,
+      "prevalence": 0.1452
+    }
+  },
+  "validation_metrics": {
+    "pr_auc": 0.2222,
+    "roc_auc": 0.5488,
+    "brier_score": 0.1997
+  },
+  "test_metrics_strictly_out_of_sample": {
+    "sample_size": 496,
+    "positives": 72,
+    "prevalence": 0.1452,
+    "pr_auc": 0.195,
+    "pr_auc_95_ci": [
+      0.1467,
+      0.2757
+    ],
+    "pr_auc_99_ci": [
+      0.133,
+      0.2998
+    ],
+    "roc_auc": 0.6098,
+    "roc_auc_95_ci": [
+      0.5458,
+      0.6739
+    ],
+    "roc_auc_99_ci": [
+      0.5229,
+      0.69
+    ],
+    "brier_score": 0.1681,
+    "ci_prevalence_comparison": {
+      "95_ci_includes_prevalence": false,
+      "95_ci_lower_bound_diff": 0.0015,
+      "99_ci_includes_prevalence": true,
+      "explanation": "Test prevalence is 0.1452. The 95% bootstrap CI lower bound is 0.1467 (diff +0.0015), virtually touching prevalence. The 99% bootstrap CI is [0.1330, 0.2998], which contains test prevalence since 0.1330 <= 0.1452 <= 0.2998."
+    }
+  }
+}
