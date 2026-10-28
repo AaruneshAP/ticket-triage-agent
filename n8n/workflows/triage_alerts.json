@@ -1,0 +1,136 @@
+{
+  "name": "Ticket Triage Telegram Alerts",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "triage-alert",
+        "options": {}
+      },
+      "id": "e5c1a8d0-1b2c-4e8f-9a3d-5f8a7c2b1e4a",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "triage-alert-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const data = item.json.body || item.json;\n  const ticketNum = data.ticket_number || 'N/A';\n  const title = data.title || 'Untitled Issue';\n  const label = data.suggested_label || 'unlabeled';\n  const conf = data.label_confidence ? (data.label_confidence * 100).toFixed(0) + '%' : 'N/A';\n  const pNotPlanned = data.p_not_planned !== undefined ? (data.p_not_planned * 100).toFixed(1) + '%' : 'N/A';\n  const isComplete = data.is_complete !== undefined ? data.is_complete : true;\n  const missing = Array.isArray(data.missing_info) ? data.missing_info.join(', ') : (data.missing_info || 'None');\n  const p50 = data.predicted_time_to_close ? data.predicted_time_to_close.p50_days : '3.5';\n  const p90 = data.predicted_time_to_close ? data.predicted_time_to_close.p90_days : '14.0';\n  \n  const isHighRisk = (data.p_not_planned && data.p_not_planned >= 0.35) || !isComplete || (parseFloat(p90) >= 30.0);\n  const severityTag = isHighRisk ? '🚨 [HIGH PRIORITY]' : 'ℹ️ [TRIAGE UPDATE]';\n  \n  let alertMsg = `${severityTag} *Issue #${ticketNum}*\n\n`;\n  alertMsg += `• *Title*: \\`${title.substring(0, 75)}\\`\n`;\n  alertMsg += `• *Suggested Integration*: \\`${label}\\` (Confidence: ${conf})\n`;\n  alertMsg += `• *Not-Planned Risk*: *${pNotPlanned}*\n`;\n  alertMsg += `• *Resolution Forecast*: P50: *${p50} days* | P90: *${p90} days*\n`;\n  alertMsg += `• *Status*: ${isComplete ? '✅ Complete Report' : '⚠️ *Incomplete Report*'}\n`;\n  \n  if (!isComplete) {\n    alertMsg += `• *Missing Diagnostic Info*: ${missing}\n`;\n  }\n  \n  results.push({\n    json: {\n      ticket_number: ticketNum,\n      is_high_risk: isHighRisk,\n      message_text: alertMsg,\n      issue_url: `https://github.com/home-assistant/core/issues/${ticketNum}`,\n      raw_data: data\n    }\n  });\n}\n\nreturn results;"
+      },
+      "id": "c7a2b9f1-3d4e-4f6a-8b1c-2e3d4f5a6b7c",
+      "name": "Parse & Format Alert",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.is_high_risk }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "name": "Is High Risk or Incomplete?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $env.TELEGRAM_BOT_TOKEN }}/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\",\n  \"text\": {{ JSON.stringify($json.message_text) }},\n  \"parse_mode\": \"Markdown\",\n  \"reply_markup\": {\n    \"inline_keyboard\": [\n      [\n        {\n          \"text\": \"🐙 Open on GitHub\",\n          \"url\": \"{{ $json.issue_url }}\"\n        }\n      ]\n    ]\n  }\n}",
+        "options": {}
+      },
+      "id": "f8e7d6c5-b4a3-4f2e-9d8c-7b6a5f4e3d2c",
+      "name": "Send Telegram High Priority",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        940,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $env.TELEGRAM_BOT_TOKEN }}/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\",\n  \"text\": {{ JSON.stringify($json.message_text) }},\n  \"parse_mode\": \"Markdown\"\n}",
+        "options": {}
+      },
+      "id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+      "name": "Send Telegram Normal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        940,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse & Format Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Format Alert": {
+      "main": [
+        [
+          {
+            "node": "Is High Risk or Incomplete?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is High Risk or Incomplete?": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram High Priority",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Telegram Normal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
