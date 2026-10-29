@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: |
+          uv sync --all-extras
+
+      - name: Ruff Lint Check
+        run: |
+          uv run ruff check .
+
+      - name: Pytest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          uv run pytest tests/
+
+      - name: dbt Parse
+        env:
+          DATABRICKS_HOST: "community.cloud.databricks.com"
+          DATABRICKS_TOKEN: "mock_ci_token"
+          DATABRICKS_HTTP_PATH: "/sql/1.0/warehouses/mock"
+          DATABRICKS_CATALOG: "workspace"
+          DATABRICKS_RAW_SCHEMA: "raw"
+        run: |
+          uv run dbt parse --project-dir dbt --profiles-dir dbt
+
+      - name: Docker Build
+        run: |
+          docker build -t ticket-triage-app:latest .
+
