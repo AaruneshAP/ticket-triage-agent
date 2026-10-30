@@ -22,8 +22,9 @@ EXPORT_DIR = "data/exports/powerbi"
 def prepare_gold_tables():
     # 1. fct_model_monitoring
     mon_records = []
-    if os.path.exists(DRIFT_PATH):
-        with open(DRIFT_PATH, "r", encoding="utf-8") as f:
+    drift_path = DRIFT_PATH if os.path.exists(DRIFT_PATH) else "hf_space/data/drift_metrics.json"
+    if os.path.exists(drift_path):
+        with open(drift_path, "r", encoding="utf-8") as f:
             d = json.load(f)
         eval_ts = d.get("timestamp", datetime.now(timezone.utc).isoformat())
         for feat, info in d.get("features_analyzed", {}).items():
@@ -38,8 +39,9 @@ def prepare_gold_tables():
 
     # 2. fct_model_performance
     perf_records = []
-    if os.path.exists(PERF_PATH):
-        with open(PERF_PATH, "r", encoding="utf-8") as f:
+    perf_path = PERF_PATH if os.path.exists(PERF_PATH) else "hf_space/data/performance_history.json"
+    if os.path.exists(perf_path):
+        with open(perf_path, "r", encoding="utf-8") as f:
             d = json.load(f)
         eval_ts = d.get("timestamp", datetime.now(timezone.utc).isoformat())
         for c in d.get("cohort_metrics", []):
@@ -62,8 +64,9 @@ def prepare_gold_tables():
 
     # 3. fct_retrain_decisions
     retrain_records = []
-    if os.path.exists(RETRAIN_PATH):
-        with open(RETRAIN_PATH, "r", encoding="utf-8") as f:
+    retrain_path = RETRAIN_PATH if os.path.exists(RETRAIN_PATH) else "hf_space/data/promotion_decisions.json"
+    if os.path.exists(retrain_path):
+        with open(retrain_path, "r", encoding="utf-8") as f:
             d = json.load(f)
         eval_ts = d.get("timestamp", datetime.now(timezone.utc).isoformat())
         for path_name, info in d.get("demonstration_paths", {}).items():

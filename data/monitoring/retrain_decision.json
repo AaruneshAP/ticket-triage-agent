@@ -1,0 +1,39 @@
+{
+  "evaluation_timestamp": "2026-10-30T13:46:08.734863+00:00",
+  "should_retrain": true,
+  "recommended_action": "TRIGGER_RETRAINING_PIPELINE",
+  "active_triggers_count": 2,
+  "triggers": [
+    {
+      "trigger_type": "feature_drift",
+      "severity": "high",
+      "description": "1 features exceeded retrain PSI threshold (0.25)",
+      "details": [
+        {
+          "feature": "body_len",
+          "psi": 0.32
+        }
+      ]
+    },
+    {
+      "trigger_type": "volume_threshold",
+      "severity": "medium",
+      "description": "Recent cohort accumulated 600 tickets (threshold: 500)",
+      "current_volume": 600,
+      "reference_volume": 1000
+    }
+  ],
+  "drift_summary": {
+    "overall_drift_alert": true,
+    "features_monitored": 2,
+    "high_drift_features": [
+      "body_len"
+    ]
+  },
+  "production_baselines": {
+    "survival_c_index": 0.5426,
+    "risk_classifier_pr_auc": 0.2222,
+    "risk_classifier_brier": 0.1997,
+    "label_top1_accuracy": 0.7
+  }
+}

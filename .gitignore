@@ -36,7 +36,9 @@ dist/
 htmlcov/
 
 # Local Data storage (raw downloads, parquet, checkpoints, CSVs)
-/data/
+/data/*
+!/data/monitoring/
+!/data/monitoring/*.json
 *.parquet
 !tests/fixtures/*.parquet
 !hf_space/data/*.parquet

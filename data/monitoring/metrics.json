@@ -1,0 +1,6 @@
+{
+  "run_timestamp": "2026-10-29T12:06:00.746468+00:00",
+  "dag_id": "triage_hourly",
+  "status": "healthy",
+  "pipeline_version": "1.0.0"
+}

@@ -2,6 +2,7 @@
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from triage.monitoring.drift import calculate_ks_test, calculate_psi, format_drift_table
 from triage.monitoring.performance import evaluate_cohort_performance, format_performance_table
@@ -171,7 +172,19 @@ def test_retrain_decision_promotion_consistency():
             assert row["final_decision"] == "PROMOTE", (
                 f"Row {row['path_name']} has is_promoted=1 but final_decision={row['final_decision']}"
             )
+            assert row["final_decision"] != "REJECT", (
+                f"Row {row['path_name']} has is_promoted=1 and final_decision=REJECT"
+            )
         elif row["is_promoted"] == 0:
             assert row["final_decision"] == "REJECT", (
                 f"Row {row['path_name']} has is_promoted=0 but final_decision={row['final_decision']}"
             )
+
+    # Invariant assertion check: verify that a row with is_promoted=1 and final_decision=REJECT is strictly rejected
+    def check_promotion_consistency(is_promoted: int, final_decision: str):
+        if is_promoted == 1 and final_decision == "REJECT":
+            raise AssertionError("Integrity violation: is_promoted=1 and final_decision=REJECT")
+
+    with pytest.raises(AssertionError, match="Integrity violation: is_promoted=1 and final_decision=REJECT"):
+        check_promotion_consistency(is_promoted=1, final_decision="REJECT")
+
