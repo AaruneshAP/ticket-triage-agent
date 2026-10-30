@@ -165,6 +165,45 @@ Every visual below is a verified reference artifact generated from live services
 
 ---
 
+## Dashboards and observability
+
+### Power BI
+
+The Power BI reporting suite is built on the Databricks gold schema (`fct_tickets`, `mart_weekly_volume`, `fct_model_monitoring`, `fct_model_performance`, `fct_retrain_decisions`). Consistent with the empirical findings across the project, resolution time is not predictable from ticket text alone, and duration forecasts remain suppressed.
+
+![Power BI Ticket Operations](docs/images/powerbi_ticket_operations.png)
+*Operational triage view displaying intake volume, open vs closed ticket counts, and integration distribution.*
+
+![Power BI Model Evaluation](docs/images/powerbi_model_results.png)
+*Model evaluation view tracking label recommender accuracy, not-planned risk, and weekly volume forecasting.*
+
+![Power BI Drift and Retraining](docs/images/powerbi_drift_retraining.png)
+*MLOps monitoring view displaying feature PSI drift tracking and automated retraining promotion decisions.*
+
+### Looker Studio
+
+[Live report (view only)](https://datastudio.google.com/reporting/a33f06e1-1c0e-4ece-8572-3aa22344acb6)
+
+Data comes from the Google Sheets feeds produced by `src/triage/monitoring/sheets_bridge.py`, filtered to Jul 1 2026 onward; ticket totals differ from Power BI for that reason (see [docs/data_reconciliation.md](docs/data_reconciliation.md)).
+
+![Looker Studio Ticket Operations](docs/images/looker_ticket_operations.png)
+*Looker Studio operational view displaying triage timeline, completeness rates, and integration health.*
+
+![Looker Studio Model Results](docs/images/looker_model_results.png)
+*Looker Studio model performance view tracking cohort metrics across rolling evaluation windows.*
+
+![Looker Studio Drift and Retraining](docs/images/looker_drift_retraining.png)
+*Looker Studio drift monitoring view displaying feature PSI stability scores and alert levels.*
+
+### Langfuse
+
+Langfuse provides distributed execution tracing for the LangGraph triage pipeline, capturing latency, token consumption, and node outputs.
+
+![Langfuse Trace](docs/images/langfuse_trace.png)
+*Langfuse execution trace recording telemetry across `parse_ticket`, `completeness_check`, `predict_models`, `retrieve_similar`, `generate_draft_reply`, and `output_formatting`.*
+
+---
+
 ## Dataset Reconciliation & Ingestion Verification
 
 Run `python scripts/evaluation/reconcile_counts.py` for a real-time count audit across all data layers:

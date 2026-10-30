@@ -27,3 +27,4 @@ To ensure statistical rigor and measure out-of-cohort generalization, the comple
 - **`draft_review.md`**: LLM draft response evaluation rubric and qualitative inspection.
 - **`warehouse_spike.md`**: Verification log and latency benchmarks for Databricks Free Edition.
 - **`data_reconciliation.md`**: End-to-end count reconciliation across raw, bronze, silver, gold, and feature stores.
+- **`images/`**: Verified visual artifacts for Power BI dashboards, Looker Studio reports, and Langfuse observability traces (see [README.md#dashboards-and-observability](../README.md#dashboards-and-observability)).
