@@ -155,3 +155,23 @@ def test_format_retraining_table():
     assert "survival_aft" in table
     assert "concordance_index" in table
     assert "NO (Kept Champion)" in table
+
+
+def test_retrain_decision_promotion_consistency():
+    """Verify that any row in fct_retrain_decisions with is_promoted=1 must have final_decision='PROMOTE'.
+
+    Fails if is_promoted=1 and final_decision=REJECT.
+    """
+    from scripts.ops.publish_gold_monitoring_tables import prepare_gold_tables
+
+    _, _, df_retrain = prepare_gold_tables()
+    assert not df_retrain.empty, "df_retrain should not be empty"
+    for _, row in df_retrain.iterrows():
+        if row["is_promoted"] == 1:
+            assert row["final_decision"] == "PROMOTE", (
+                f"Row {row['path_name']} has is_promoted=1 but final_decision={row['final_decision']}"
+            )
+        elif row["is_promoted"] == 0:
+            assert row["final_decision"] == "REJECT", (
+                f"Row {row['path_name']} has is_promoted=0 but final_decision={row['final_decision']}"
+            )

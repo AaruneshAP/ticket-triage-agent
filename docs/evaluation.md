@@ -116,7 +116,18 @@ ci_95 = (np.percentile(boot_c, 2.5), np.percentile(boot_c, 97.5))
 |---|---|---|---|---|
 | **70.0% Top-1** | 125 | Unpruned raw components in validation | Validation Split ($N=786$) | Exploratory EDA benchmark on all unpruned raw integration strings |
 | **71.3% Top-1** | 26 | Closed tickets across rolling monitoring windows | Rolling Monitoring Cohort (2026-09-28 to 2026-10-12, $N=352$) | Rolling production monitoring cohort |
-| **80.0% Top-1** | 26 | Labeled tickets (`integration_clean != 'unlabeled'`) | Strictly Out-of-Sample Test ($N=915$) | Headline out-of-sample benchmark (95% CI: `[77.60%, 82.62%]`) |
+| **58.3% Top-1** | 26 | Labeled tickets in test split (Initial Champion on initial train split $N=976$) | Strictly Out-of-Sample Test ($N=915$) | Retraining demonstration initial champion baseline (`fct_retrain_decisions`) |
+| **80.0% Top-1** | 26 | Labeled tickets in test split (Promoted Candidate on grown split $N=1,762$) | Strictly Out-of-Sample Test ($N=915$) | Headline out-of-sample benchmark & promoted candidate (`fct_retrain_decisions`, 95% CI: `[77.60%, 82.62%]`) |
+
+#### Automated Retraining Demonstration Benchmark (`fct_retrain_decisions`)
+
+The automated retraining engine (`src/triage/monitoring/retrain.py`) evaluates candidate models against an active champion benchmark:
+- **Task**: Integration label recommendation on `clean_text_for_label` with the integration causing the issue field strictly stripped.
+- **Class Set**: Production 26-class target (top 25 integrations from initial training split + 'other').
+- **Split & Population**: Evaluated on the strictly out-of-sample test split (`test_df`, $N=1,150$ total tickets, 915 labeled tickets with non-empty integration).
+- **Initial Champion Baseline**: Model trained strictly on the initial training window (`train_df`, $N=976$, `max_features=1500`), achieving **58.25%** Top-1 accuracy on the test set.
+- **Path (a) Rejection Benchmark**: Deliberately degraded candidate with restricted classes (4 classes) and vocabulary (20 features) achieves **18.14%** Top-1 accuracy (Delta: **-0.4011** <= required margin of 0.0100). Decision: `final_decision="REJECT"` (`is_promoted=0`).
+- **Path (b) Promotion Benchmark**: Candidate retrained on grown data accumulated since champion was trained (`train_df` + `val_df`, $N=1,762$, expanded by 786 tickets, `max_features=3000`) achieves **80.00%** Top-1 accuracy (Delta: **+0.2175** >= required margin of 0.0100). Decision: `final_decision="PROMOTE"` (`is_promoted=1`), successfully promoting the model to production (`models/labeler.joblib`).
 
 #### Top 10 Classes by Support on Test Set (N = 915)
 

@@ -1,33 +1,35 @@
 {
-  "timestamp": "2026-10-28T16:11:09.025398+00:00",
+  "timestamp": "2026-10-30T13:29:14.033315+00:00",
   "status": "completed",
   "promotion_margin": 0.01,
   "demonstration_paths": {
     "path_a_worse_candidate": {
-      "description": "Deliberately degraded candidate with restricted vocabulary & classes",
+      "description": "Integration label recommender (26 classes). Deliberately degraded candidate (4 classes, 20 features) evaluated on out-of-sample test split (N=915 labeled tickets). Champion: 0.5825, Candidate: 0.1814.",
       "training_dataset_size": 976,
       "metric_evaluated": "top_1_accuracy",
-      "champion_metric": 0.6973,
+      "champion_metric": 0.5825,
       "candidate_metric": 0.1814,
-      "delta": -0.5159,
+      "delta": -0.4011,
       "margin_required": 0.01,
       "decision": "REJECTED_KEPT_CHAMPION",
+      "final_decision": "REJECT",
       "promoted": false,
-      "mlflow_run_id": "8856ca99dffd4fcba8f8acd0badacdc8"
+      "mlflow_run_id": "7822ad2f059e47e9ab24281bc62fe628"
     },
     "path_b_better_candidate": {
-      "description": "Retrained on data that grew since champion was trained (expanded by 786 tickets)",
+      "description": "Integration label recommender (26 classes). Retrained on grown data (expanded by 786 tickets from 976 to 1,762) evaluated on out-of-sample test split (N=915 labeled tickets). Champion: 0.5825, Candidate: 0.8000.",
       "initial_champion_training_size": 976,
       "grown_retraining_dataset_size": 1762,
       "growth_tickets_added": 786,
       "metric_evaluated": "top_1_accuracy",
-      "champion_metric": 0.6973,
+      "champion_metric": 0.5825,
       "candidate_metric": 0.8,
-      "delta": 0.1027,
+      "delta": 0.2175,
       "margin_required": 0.01,
       "decision": "PROMOTED_CHAMPION",
+      "final_decision": "PROMOTE",
       "promoted": true,
-      "mlflow_run_id": "4d595f266435446186d059281ede1873"
+      "mlflow_run_id": "e2fa4989907e4d1dbb252c53c750f7fb"
     }
   }
 }

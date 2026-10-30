@@ -68,6 +68,8 @@ def prepare_gold_tables():
         eval_ts = d.get("timestamp", datetime.now(timezone.utc).isoformat())
         for path_name, info in d.get("demonstration_paths", {}).items():
             size = info.get("grown_retraining_dataset_size") or info.get("training_dataset_size") or 0
+            is_prom = int(info.get("promoted", False))
+            final_dec = "PROMOTE" if is_prom else "REJECT"
             retrain_records.append({
                 "path_name": str(path_name),
                 "description": str(info.get("description", "")),
@@ -77,8 +79,8 @@ def prepare_gold_tables():
                 "candidate_metric": float(info.get("candidate_metric", 0.0)),
                 "delta": float(info.get("delta", 0.0)),
                 "margin_required": float(info.get("margin_required", 0.01)),
-                "is_promoted": int(info.get("promoted", False)),
-                "final_decision": str(info.get("final_decision", "REJECT")),
+                "is_promoted": is_prom,
+                "final_decision": final_dec,
                 "evaluated_at": eval_ts,
             })
     df_retrain = pd.DataFrame(retrain_records)
