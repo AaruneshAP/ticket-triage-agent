@@ -33,11 +33,16 @@ def generate_sheets_feeds(
     os.makedirs(export_dir, exist_ok=True)
     generated_files = {}
 
-    if not os.path.exists(features_path):
-        logger.warning(f"Features parquet not found at {features_path}.")
-        return {"status": "error", "message": f"File not found: {features_path}"}
+    actual_features_path = features_path
+    if not os.path.exists(actual_features_path):
+        fallback = os.path.join("hf_space", "data", "snapshot_tickets.parquet")
+        if os.path.exists(fallback):
+            actual_features_path = fallback
+        else:
+            logger.warning(f"Features parquet not found at {features_path}.")
+            return {"status": "error", "message": f"File not found: {features_path}"}
 
-    df = pd.read_parquet(features_path)
+    df = pd.read_parquet(actual_features_path)
     if "created_at_dt" not in df.columns:
         df["created_at_dt"] = pd.to_datetime(df["created_at"], errors="coerce", utc=True)
 
@@ -101,9 +106,10 @@ def generate_sheets_feeds(
 
     # 3. Model Performance Feed
     perf_rows = []
-    if os.path.exists(PERFORMANCE_PATH):
+    perf_path = PERFORMANCE_PATH if os.path.exists(PERFORMANCE_PATH) else os.path.join("hf_space", "data", "performance_history.json")
+    if os.path.exists(perf_path):
         try:
-            with open(PERFORMANCE_PATH, "r", encoding="utf-8") as f:
+            with open(perf_path, "r", encoding="utf-8") as f:
                 perf_data = json.load(f)
             for c in perf_data.get("cohort_metrics", []):
                 perf_rows.append({
@@ -127,12 +133,16 @@ def generate_sheets_feeds(
 
     # 4. Drift Monitoring Feed
     drift_rows = []
-    if os.path.exists(DRIFT_PATH):
+    drift_path = DRIFT_PATH if os.path.exists(DRIFT_PATH) else os.path.join("hf_space", "data", "drift_metrics.json")
+    if os.path.exists(drift_path):
         try:
-            with open(DRIFT_PATH, "r", encoding="utf-8") as f:
+            with open(drift_path, "r", encoding="utf-8") as f:
                 drift_data = json.load(f)
             ts = drift_data.get("timestamp", datetime.now(timezone.utc).isoformat())
             for feat, data in drift_data.get("features_analyzed", {}).items():
+                # Suppress predicted resolution-time metrics (P50, P90, time-to-close)
+                if any(k in feat.lower() for k in ["predicted_time_to_close", "p50", "p90", "resolution_time", "closure_prob", "time_to_close"]):
+                    continue
                 drift_rows.append({
                     "Evaluated_At": ts,
                     "Feature_Or_Metric": feat,
@@ -238,9 +248,21 @@ def sync_to_google_sheets(
         row_counts[tab_name] = {
             "total_rows": len(read_rows),
             "data_rows": len(read_rows) - 1 if read_rows else 0,
-            "columns": read_rows[0] if read_rows else [],
+            "header": read_rows[0] if read_rows else [],
+            "first_3_rows": read_rows[1:4] if len(read_rows) > 1 else [],
         }
         logger.info(f"Synced '{tab_name}': {len(read_rows)} total rows verified.")
+
+    # Remove default empty Sheet1 if all target tabs are active
+    if "Sheet1" in existing_tabs:
+        try:
+            service.spreadsheets().batchUpdate(
+                spreadsheetId=sheet_id,
+                body={"requests": [{"deleteSheet": {"sheetId": existing_tabs["Sheet1"]}}]},
+            ).execute()
+            logger.info("Removed empty default Sheet1 tab.")
+        except Exception as e:
+            logger.debug(f"Could not delete Sheet1: {e}")
 
     return {
         "status": "success",

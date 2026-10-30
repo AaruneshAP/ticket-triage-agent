@@ -9,6 +9,8 @@ Fails if any resolution-time probability, P50, or P90 appears in:
 import re
 from pathlib import Path
 
+import pandas as pd
+
 from triage.agent.graph import TriageAgentGraph
 from triage.agent.llm import call_llm_draft
 
@@ -103,3 +105,37 @@ def test_hf_space_index_html_suppresses_resolution_metrics():
     for pat in forbidden_patterns:
         match = re.search(pat, html_content, re.IGNORECASE)
         assert not match, f"hf_space/index.html contains forbidden resolution term matching '{pat}': {match.group(0)}"
+
+
+def test_sheets_feeds_suppress_resolution_metrics():
+    """Verify Google Sheets feeds contain no predicted resolution-time columns or values (P50, P90, closure probabilities)."""
+    from triage.monitoring.sheets_bridge import generate_sheets_feeds
+
+    feeds = generate_sheets_feeds()
+    assert feeds.get("status") == "success"
+
+    forbidden_patterns = [
+        r"\bp50\b",
+        r"\bp90\b",
+        r"predicted_time_to_close",
+        r"probability of closing",
+        r"closure_prob",
+        r"p_closed_within",
+    ]
+
+    for feed_name, csv_path in feeds.get("files_generated", {}).items():
+        df = pd.read_csv(csv_path)
+        # Check column names
+        for col in df.columns:
+            for pat in forbidden_patterns:
+                assert not re.search(pat, col, re.IGNORECASE), (
+                    f"Feed '{feed_name}' contains forbidden predicted resolution-time column '{col}' matching '{pat}'"
+                )
+        # Check cell values
+        for col in df.columns:
+            for val in df[col].dropna().astype(str):
+                for pat in forbidden_patterns:
+                    assert not re.search(pat, val, re.IGNORECASE), (
+                        f"Feed '{feed_name}' column '{col}' contains forbidden predicted resolution-time value '{val}' matching '{pat}'"
+                    )
+
