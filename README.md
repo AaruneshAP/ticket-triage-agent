@@ -175,7 +175,7 @@ The Power BI reporting suite is built on the Databricks gold schema (`fct_ticket
 *Operational triage view displaying intake volume, open vs closed ticket counts, and integration distribution.*
 
 ![Power BI Model Evaluation](docs/images/powerbi_model_results.png)
-*Model evaluation view tracking label recommender accuracy, not-planned risk, and weekly volume forecasting.*
+*Model evaluation view showing survival C-index by window against the 0.5 chance line, label recommender accuracy and not-planned PR-AUC.*
 
 ![Power BI Drift and Retraining](docs/images/powerbi_drift_retraining.png)
 *MLOps monitoring view displaying feature PSI drift tracking and automated retraining promotion decisions.*
