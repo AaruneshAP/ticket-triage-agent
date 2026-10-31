@@ -193,8 +193,8 @@ for _, r in sample_df.iterrows():
             "rule_flagged": not is_complete,
             "survival_latency_status": "no reliable signal for resolution time",
             "not_planned_risk_probability": p_np_val,
-            "not_planned_baseline": 0.163,
-            "out_of_sample_prauc": 0.201,
+            "not_planned_baseline": 0.145,
+            "out_of_sample_prauc": 0.195,
         },
     })
 

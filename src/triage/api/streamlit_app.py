@@ -8,7 +8,9 @@ Features:
    fixed-horizon PR-AUC, and label recommender performance.
 """
 
+import json
 import os
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -142,12 +144,49 @@ st.sidebar.info(f"Feature Matrix: {len(df_features):,} rows")
 
 st.sidebar.markdown("---")
 st.sidebar.markdown("**Model Governance & Honesty**")
-st.sidebar.caption("• Label Recommender: 🟢 **Strong** (Top-1 70.0%, Top-3 90.9%)")
-st.sidebar.caption("• Closed Without Fix: 🟡 **Weak-Marginal** (PR-AUC 0.222 vs 0.163)")
-st.sidebar.caption("• Fixed-Horizon: 🟡 **Weak-Marginal** (ROC-AUC ~0.58 & ~0.61)")
+
+_results_dir = Path("docs/results")
+_lbl_file = _results_dir / "label_recommender.json"
+_np_file = _results_dir / "not_planned.json"
+
+_top1_acc = 0.80
+_top3_acc = 0.9716
+_macro_f1 = 0.6443
+_other_acc = 0.7672
+if _lbl_file.exists():
+    try:
+        with open(_lbl_file, "r", encoding="utf-8") as _f:
+            _lbl_data = json.load(_f).get("test_metrics_strictly_out_of_sample", {})
+            _top1_acc = _lbl_data.get("top_1_accuracy", _top1_acc)
+            _top3_acc = _lbl_data.get("top_3_accuracy", _top3_acc)
+            _macro_f1 = _lbl_data.get("macro_f1", _macro_f1)
+            _other_acc = _lbl_data.get("always_other_baseline", {}).get("accuracy", _other_acc)
+    except Exception:
+        pass
+
+_np_roc = 0.6098
+_np_pr = 0.1950
+_np_prev = 0.1452
+if _np_file.exists():
+    try:
+        with open(_np_file, "r", encoding="utf-8") as _f:
+            _np_data = json.load(_f).get("test_metrics_strictly_out_of_sample", {})
+            _np_roc = _np_data.get("roc_auc", _np_roc)
+            _np_pr = _np_data.get("pr_auc", _np_pr)
+            _np_prev = _np_data.get("prevalence", _np_prev)
+    except Exception:
+        pass
+
+st.sidebar.caption(
+    f"• Label Recommender: 🟢 **Strong** (Top-1 {_top1_acc:.1%} vs always-'other' {_other_acc:.2%}, Top-3 {_top3_acc:.2%}, Macro-F1 {_macro_f1:.3f})"
+)
+st.sidebar.caption(
+    f"• Closed Without Fix: 🟡 **Weak-Marginal** (ROC-AUC {_np_roc:.3f}, PR-AUC {_np_pr:.3f} vs test prevalence {_np_prev:.3f})"
+)
+st.sidebar.caption("• Fixed-Horizon: 🟡 **Weak-Marginal** (ROC-AUC 0.4621 [14d] & 0.5329 [30d])")
 st.sidebar.caption("• Volume Forecaster: 🟡 **Marginal** (ETS MAE 76.86 vs 4-wk 79.75, +3.6% gain)")
 st.sidebar.caption("• Duplicate Retrieval: ℹ️ **3 of 3 pairs (small sample)**")
-st.sidebar.caption("• Survival Model: 🔴 **Near Chance** (C-index ~0.54, CI includes 0.50)")
+st.sidebar.caption("• Survival Model: 🔴 **Near Chance** (C-index 0.514 [0.492, 0.536], indistinguishable from chance)")
 
 
 st.title("🎫 Ticket Triage Agent — Human Review Queue")

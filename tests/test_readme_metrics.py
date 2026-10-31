@@ -107,10 +107,12 @@ def test_hf_space_metrics_match_evaluation_md():
 
     # Assert exact required metrics in index.html
     assert "0.5426" in html_text, "Missing Survival C-Index 0.5426 in HF Space"
-    assert "0.514 [0.492, 0.536]" in html_text, "Missing Survival Out-of-Sample CI in HF Space"
-    assert "0.222" in html_text, "Missing Not-Planned Offline PR-AUC 0.222 in HF Space"
-    assert "0.201" in html_text, "Missing Not-Planned Out-of-Sample PR-AUC 0.201 in HF Space"
-    assert "0.163" in html_text, "Missing Prevalence Baseline 0.163 in HF Space"
+    assert "0.195" in html_text, "Missing Not-Planned Out-of-Sample PR-AUC 0.195 in HF Space"
+    assert "0.145" in html_text, "Missing Test Prevalence 0.145 in HF Space"
+    assert "0.610" in html_text, "Missing Not-Planned ROC-AUC 0.610 in HF Space"
+    assert "80.0%" in html_text, "Missing Label Top-1 80.0% in HF Space"
+    assert "76.72%" in html_text, "Missing Label always-other baseline 76.72% in HF Space"
+    assert "0.644" in html_text, "Missing Label Macro-F1 0.644 in HF Space"
     assert "0.31 – 1.00" in html_text, "Missing LOCO per-fold range 0.31 – 1.00 in HF Space"
     assert "0.62" in html_text, "Missing LOCO Conservative Mean F1 0.62 in HF Space"
     assert "0.51" in html_text, "Missing LOCO Conservative Pooled F1 0.51 in HF Space"

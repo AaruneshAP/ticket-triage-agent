@@ -195,13 +195,34 @@ with tab_performance:
 
     m1, m2, m3, m4 = st.columns(4)
     with m1:
-        st.metric("Survival C-Index (Validation)", "0.5426", help="Validation split (tuning, N=786). Out-of-sample test: 0.514 [0.492, 0.536] (95% bootstrap CI, indistinguishable from chance 0.50). Negative result.")
+        st.metric(
+            "Survival C-Index (Out-of-Sample)",
+            "0.514",
+            delta="95% CI [0.492, 0.536]",
+            delta_color="inverse",
+            help="Strictly out-of-sample post-training test C-index: 0.514 [0.492, 0.536] (crosses chance 0.50, negative result). Validation (tuning) split C-index: 0.5426.",
+        )
     with m2:
-        st.metric("Not-Planned PR-AUC (Validation)", "0.222", help="Validation split (tuning, N=411). Out-of-sample test: ROC-AUC 0.610 [0.546, 0.674] (weak ranking signal); PR-AUC 0.1950 [0.147, 0.276] on N=496 closed tickets (barely above 0.145 test prevalence; not decision-grade).")
+        st.metric(
+            "Not-Planned PR-AUC (Out-of-Sample)",
+            "0.195",
+            delta="vs 0.145 test prev",
+            help="Strictly out-of-sample test: ROC-AUC 0.610 [0.546, 0.674], PR-AUC 0.1950 [0.147, 0.276] vs test prevalence 0.145 on N=496 closed tickets. Validation (tuning) split: PR-AUC 0.222, ROC-AUC 0.549.",
+        )
     with m3:
-        st.metric("Empirical Brier Score (Validation)", "0.1997", help="Validation split (tuning, N=411). Out-of-sample test: 0.1681 on 14.5% ground truth.")
+        st.metric(
+            "Empirical Brier Score (Out-of-Sample)",
+            "0.1681",
+            delta="14.5% test prevalence",
+            help="Strictly out-of-sample test: 0.1681 on N=496 closed tickets. Validation (tuning) split: 0.1997 on 15.3% prevalence.",
+        )
     with m4:
-        st.metric("Integration Top-1 (Validation)", "86.6%", help="Validation split (tuning, N=580 labeled, Macro-F1 0.832). Out-of-sample test (N=915, 26 classes): Top-1 80.0% vs always-'other' baseline 76.7%, Macro-F1 0.644 vs 0.033 baseline. Non-'other' tickets: Top-1 83.6%, Top-3 93.4%, Routed Recall 88.3%.")
+        st.metric(
+            "Integration Top-1 (Out-of-Sample)",
+            "80.0%",
+            delta="vs 76.72% always-other",
+            help="Strictly out-of-sample test (N=915 labeled, 26 classes): Top-1 80.0%, Top-3 97.16%, Macro-F1 0.644 vs always-'other' baseline 76.72% (Macro-F1 0.033). Validation (tuning) split: Top-1 86.6%, Macro-F1 0.832.",
+        )
 
     # Load performance history
     perf_path = "data/performance_history.json"

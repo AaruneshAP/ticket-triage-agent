@@ -490,7 +490,7 @@
                                 <div class="kpi-title">Not-Planned Risk (p)</div>
                                 <div class="kpi-value" id="pred-risk">-</div>
                                 <div class="kpi-badge" id="pred-risk-badge">-</div>
-                                <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.3rem;">Prevalence baseline: 0.163 | Out-of-sample PR-AUC: 0.201</div>
+                                <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.3rem;">Test prevalence: 0.145 | Out-of-sample PR-AUC: 0.195 (ROC-AUC: 0.610)</div>
                             </div>
                         </div>
 
@@ -557,28 +557,28 @@
 
                 <div class="kpi-grid">
                     <div class="kpi-card">
-                        <div class="kpi-title">Survival C-Index (Validation)</div>
-                        <div class="kpi-value" style="color:var(--cyan);">0.5426</div>
-                        <div class="kpi-badge" style="background:rgba(56,189,248,0.12); color:var(--cyan);">Validation Split (Tuning, N=786)</div>
-                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">Out-of-sample: 0.514 [0.492, 0.536] (Crosses chance 0.50, negative result)</div>
+                        <div class="kpi-title">Survival C-Index (Out-of-Sample)</div>
+                        <div class="kpi-value" style="color:var(--cyan);">0.514</div>
+                        <div class="kpi-badge" style="background:rgba(56,189,248,0.12); color:var(--cyan);">95% CI: [0.492, 0.536] (Chance 0.50)</div>
+                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">Out-of-sample C-index 0.514; validation (tuning) was 0.5426. Negative result.</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-title">Not-Planned PR-AUC (Validation)</div>
-                        <div class="kpi-value" style="color:var(--emerald);">0.222</div>
-                        <div class="kpi-badge" style="background:rgba(16,185,129,0.12); color:var(--emerald);">Validation Split (Tuning, N=411)</div>
-                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">Out-of-sample: 0.201 (N=301) vs prevalence baseline 0.163</div>
+                        <div class="kpi-title">Not-Planned PR-AUC (Out-of-Sample)</div>
+                        <div class="kpi-value" style="color:var(--emerald);">0.195</div>
+                        <div class="kpi-badge" style="background:rgba(16,185,129,0.12); color:var(--emerald);">ROC-AUC: 0.610 | Prevalence: 0.145</div>
+                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">Strictly out-of-sample test; validation (tuning) PR-AUC was 0.222</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-title">Empirical Brier Score (Validation)</div>
-                        <div class="kpi-value" style="color:#A78BFA;">0.1997</div>
-                        <div class="kpi-badge" style="background:rgba(167,139,250,0.12); color:#A78BFA;">Validation Split (Tuning, N=411)</div>
-                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">Out-of-sample: 0.2052 on 16.3% ground truth</div>
+                        <div class="kpi-title">Empirical Brier Score (Out-of-Sample)</div>
+                        <div class="kpi-value" style="color:#A78BFA;">0.1681</div>
+                        <div class="kpi-badge" style="background:rgba(167,139,250,0.12); color:#A78BFA;">Test Split (N=496 closed)</div>
+                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">Out-of-sample: 0.1681 on 14.5% ground truth; validation (tuning): 0.1997</div>
                     </div>
                     <div class="kpi-card">
                         <div class="kpi-title">Label Recommender Top-1 (Out-of-Sample)</div>
                         <div class="kpi-value" style="color:var(--emerald);">80.0%</div>
-                        <div class="kpi-badge" style="background:rgba(16,185,129,0.12); color:var(--emerald);">Macro-F1: 0.6443</div>
-                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">Top-3 Accuracy: 97.2% across 26 classes (Validation: 86.6% Top-1, 0.8316 Macro-F1)</div>
+                        <div class="kpi-badge" style="background:rgba(16,185,129,0.12); color:var(--emerald);">Macro-F1: 0.644 | Top-3: 97.16%</div>
+                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">vs always-"other" baseline 76.72% (Validation (tuning): 86.6% Top-1, 0.832 Macro-F1)</div>
                     </div>
                 </div>
 
@@ -781,14 +781,14 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.888,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
     "number": 181369,
     "title": "TOTP setup flow rejects codes with clock drift that a normal login would accept (missing valid_window)",
-    "body": "### The problem\n\nWhen enrolling a new TOTP authenticator during MFA setup (Profile \u2192 Security \u2192 Two-factor authentication), a code generated by an authenticator app with even a small clock drift (~15-25 seconds) from the server is rejected as `invalid_code` \u2014 even though the exact same code, submitted a few seconds later or with a synced clock, would be valid.\n\nThis is inconsistent with normal login-time TOTP validation, which already tolerates one time-step of drift.\n\n### Root cause\n\nIn `homeassistant/auth/mfa_modules/totp.py`:\n\n- `TotpAuthModule._validate_2fa` (used during actual login) calls:\n  ```python\n  return bool(pyotp.TOTP(ota_secret).verify(code, valid_window=1))\n  ```\n  \u2192 tolerates \u00b11 time step (~30s) of clock drift.\n\n- `TotpSetupFlow.async_step_init` (used during initial enrollment) calls:\n  ```python\n  verified = await self.hass.async_add_executor_job(\n      pyotp.TOTP(self._ota_secret).verify, user_input[\"code\"]\n  )\n  ```\n  \u2192 no `valid_window` passed, defaults to `0` (exact match only, no drift tolerance).\n\nSo the one-time enrollment step is stricter than every subsequent login, which is surprising and leads to confusing "it's not working" reports that are actually just phone clock drift, indistinguishable from a real bug from an external perspective (no error is obviously actionable — it just silently fails to confirm).\n\n### To reproduce\n\n1. Set your phone/authenticator app's clock to be ~20-25 seconds off from real time (or just have a phone with slight drift, which is common).\n2. Go to Profile \u2192 Security \u2192 enable TOTP two-factor authentication.\n3. Scan the QR code, enter the 6-digit code shown by the app.\n4. Observe: the code is rejected, with no indication that clock drift is the cause.\n\n### Expected behavior\n\nThe setup flow should use the same `valid_window=1` tolerance as the login-time validation (`_validate_2fa`), for consistent behavior between enrollment and everyday use.\n\n### Suggested fix\n\nIn `TotpSetupFlow.async_step_init`, change:\n```python\npyotp.TOTP(self._ota_secret).verify, user_input[\"code\"]\n```\nto:\n```python\npyotp.TOTP(self._ota_secret).verify, user_input[\"code\"], None, 1\n```\n(or via a `functools.partial`/lambda to pass `valid_window=1` as a keyword argument through `async_add_executor_job`), matching `_validate_2fa`.\n\n### Environment\n\n- Home Assistant Core 2026.2.3 (pip/venv installation, no Supervisor)\n- Python 3.13.5\n- Reproduced by simulating the exact WebSocket `auth/setup_mfa` flow the frontend uses, confirming the server-side `invalid_code` rejection was purely due to a ~24s clock offset on the client generating the code \u2014 a code generated using the server's exact timestamp was accepted immediately.\n",
+    "body": "### The problem\n\nWhen enrolling a new TOTP authenticator during MFA setup (Profile \u2192 Security \u2192 Two-factor authentication), a code generated by an authenticator app with even a small clock drift (~15-25 seconds) from the server is rejected as `invalid_code` \u2014 even though the exact same code, submitted a few seconds later or with a synced clock, would be valid.\n\nThis is inconsistent with normal login-time TOTP validation, which already tolerates one time-step of drift.\n\n### Root cause\n\nIn `homeassistant/auth/mfa_modules/totp.py`:\n\n- `TotpAuthModule._validate_2fa` (used during actual login) calls:\n  ```python\n  return bool(pyotp.TOTP(ota_secret).verify(code, valid_window=1))\n  ```\n  \u2192 tolerates \u00b11 time step (~30s) of clock drift.\n\n- `TotpSetupFlow.async_step_init` (used during initial enrollment) calls:\n  ```python\n  verified = await self.hass.async_add_executor_job(\n      pyotp.TOTP(self._ota_secret).verify, user_input[\"code\"]\n  )\n  ```\n  \u2192 no `valid_window` passed, defaults to `0` (exact match only, no drift tolerance).\n\nSo the one-time enrollment step is stricter than every subsequent login, which is surprising and leads to confusing \"it's not working\" reports that are actually just phone clock drift, indistinguishable from a real bug from the user's perspective (no error is obviously actionable \u2014 it just silently fails to confirm).\n\n### To reproduce\n\n1. Set your phone/authenticator app's clock to be ~20-25 seconds off from real time (or just have a phone with slight drift, which is common).\n2. Go to Profile \u2192 Security \u2192 enable TOTP two-factor authentication.\n3. Scan the QR code, enter the 6-digit code shown by the app.\n4. Observe: the code is rejected, with no indication that clock drift is the cause.\n\n### Expected behavior\n\nThe setup flow should use the same `valid_window=1` tolerance as the login-time validation (`_validate_2fa`), for consistent behavior between enrollment and everyday use.\n\n### Suggested fix\n\nIn `TotpSetupFlow.async_step_init`, change:\n```python\npyotp.TOTP(self._ota_secret).verify, user_input[\"code\"]\n```\nto:\n```python\npyotp.TOTP(self._ota_secret).verify, user_input[\"code\"], None, 1\n```\n(or via a `functools.partial`/lambda to pass `valid_window=1` as a keyword argument through `async_add_executor_job`), matching `_validate_2fa`.\n\n### Environment\n\n- Home Assistant Core 2026.2.3 (pip/venv installation, no Supervisor)\n- Python 3.13.5\n- Reproduced by simulating the exact WebSocket `auth/setup_mfa` flow the frontend uses, confirming the server-side `invalid_code` rejection was purely due to a ~24s clock offset on the client generating the code \u2014 a code generated using the server's exact timestamp was accepted immediately.\n",
     "created_at": "2026-09-05T10:07:25Z",
     "author": "angeousta",
     "random_seed_note": "Sampled 30 tickets with fixed seed (random_state=42) from the holdout window strictly after the champion models' training cutoff (2026-08-27T05:00:47Z) up to 2026-10-26T06:15:50Z. None of these tickets were used for model fitting or hyperparameter tuning.",
@@ -808,8 +808,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.859,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -835,8 +835,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.715,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -862,14 +862,14 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.803,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
     "number": 181632,
     "title": "Hue MotionAware security_area_motion causes binary_sensor setup to fail with StopIteration",
-    "body": "### The problem\n\nI am using Philips Hue MotionAware with a Hue Bridge.\n\nThe MotionAware area itself works correctly in the Hue app, but Home Assistant fails while setting up the Philips Hue binary_sensor platform.\n\nThe error is:\n\nError while setting up hue platform for binary_sensor: generator raised StopIteration\n\nThe traceback shows that HueMotionAwareSensor tries to resolve a group using:\n\nself.bridge.api.groups[group_id]\n\nbut no matching group is found, resulting in StopIteration.\n\nThe Hue diagnostics show that my MotionAware configuration named Bewegungsbereich is healthy and enabled.\n\nThe MotionAware configuration itself references a resource with:\n\nrtype: bridge_home\n\nwhile the Hue automation associated with MotionAware correctly targets a normal Hue zone named Flur-Bewegung.\n\nFlur-Bewegung contains the lamps controlled by the MotionAware automation and the associated Hue scenes.\n\nThis may be related to the MotionAware configuration referencing bridge_home rather than a regular Hue room or zone. The traceback shows HueMotionAwareSensor failing while resolving group_id through bridge.api.groups[group_id].\n\nAs a result, setup of the Hue binary sensor platform fails.\n\nThe MotionAware functionality itself continues to work correctly in the Hue app.\n\n### What version of Home Assistant Core has the issue?\n\ncore-2026.9.1\n\n### What was the last working version of Home Assistant Core?\n\n_No response_\n\n### What type of installation are you running?\n\nHome Assistant OS\n\n### Integration causing the issue\n\nPhilips Hue\n\n### Link to integration documentation on our website\n\nhttps://www.home-assistant.io/integrations/hue\n\n### Diagnostics information\n\nPhilips Hue integration diagnostics are available.\n\nRelevant observations from the diagnostics:\n\nMotionAware configuration name: Bewegungsbereich\nResource type: motion_area_configuration\nHealth: healthy\nEnabled: true\nIts associated group has rtype: bridge_home\nIt exposes:\nconvenience_area_motion\nsecurity_area_motion\nThe related Hue lighting automation targets a normal Hue zone named Flur-Bewegung\n\nThe security_area_motion resource is owned by the same motion_area_configuration\n\n### Example YAML snippet\n\n```yaml\n\n```\n\n### Anything in the logs that might be useful for us?\n\n```txt\nTraceback (most recent call last):\n  File \"/usr/src/homeassistant/homeassistant/components/hue/v2/binary_sensor.py\", line 110, in <genexpr>\n    make_binary_sensor_entity(sensor)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"/usr/src/homeassistant/homeassistant/components/hue/v2/binary_sensor.py\", line 238, in __init__\n    self.hue_group = self.bridge.api.groups[group_id]\n                     ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/usr/local/lib/python3.14/site-packages/aiohue/v2/controllers/base.py\", line 366, in __getitem__\n    return next(x for y in self._resources for x in y if x.id == id)\nStopIteration\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/usr/src/homeassistant/homeassistant/helpers/entity_platform.py\", line 499, in _async_setup_platform\n    await asyncio.shield(awaitable)\n  File \"/usr/src/homeassistant/homeassistant/components/hue/binary_sensor.py\", line 21, in async_setup_entry\n    await setup_entry_v2(hass, config_entry, async_add_entities)\n  File \"/usr/src/homeassistant/homeassistant/components/hue/v2/binary_sensor.py\", line 129, in async_setup_entry\n    register_items(api.sensors.security_area_motion, HueMotionAwareSensor)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/src/homeassistant/homeassistant/components/hue/v2/binary_sensor.py\", line 109, in register_items\n    async_add_entities(\n    ~~~~~~~~~~~~~~~~~~^\n        make_binary_sensor_entity(sensor)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        for sensor in controller\n        ^^^^^^^^^^^^^^^^^^^^^^^^\n        if _resource_valid(sensor, controller)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/usr/src/homeassistant/homeassistant/helpers/entity_platform.py\", line 618, in _async_schedule_add_entities_for_entry\n    new_entities if type(new_entities) is list else list(new_entities)\n                                                    ~~~~^^^^^^^^^^^^^^\nRuntimeError: generator raised StopIteration\n\n-------\n-------\n\nmotion_area_configuration\n  name: Bewegungsbereich\n  health: healthy\n  enabled: true\n  group.rtype: bridge_home\n\nservices:\n  convenience_area_motion\n  security_area_motion\n\nHue automation:\n  source.rtype: motion_area_configuration\n  target group.rtype: zone\n```\n\n### Additional information\n\nThe Hue MotionAware setup is valid and functional in the Hue app.\n\nThere are two separate Hue resources involved:\n\nBewegungsbereich is the MotionAware motion_area_configuration\nFlur-Bewegung is the Hue zone containing the lamps controlled by the MotionAware automation and their scenes\n\nThe Hue automation associated with MotionAware correctly references Flur-Bewegung as a normal zone.\n\nThe MotionAware configuration itself references bridge_home.\n\nThe traceback shows that Home Assistant performs the following lookup while creating the MotionAware binary sensor:\n\nself.hue_group = self.bridge.api.groups[group_id]\n\nThis lookup raises StopIteration.\n\nIt is therefore possible that the bridge_home reference is not handled correctly by HueMotionAwareSensor, but I cannot confirm that this is the root cause.\n\nThe important part from an external perspective is that the Hue MotionAware configuration works correctly on the Hue Bridge, while Home Assistant fails during setup of the Hue binary_sensor platform.",
+    "body": "### The problem\n\nI am using Philips Hue MotionAware with a Hue Bridge.\n\nThe MotionAware area itself works correctly in the Hue app, but Home Assistant fails while setting up the Philips Hue binary_sensor platform.\n\nThe error is:\n\nError while setting up hue platform for binary_sensor: generator raised StopIteration\n\nThe traceback shows that HueMotionAwareSensor tries to resolve a group using:\n\nself.bridge.api.groups[group_id]\n\nbut no matching group is found, resulting in StopIteration.\n\nThe Hue diagnostics show that my MotionAware configuration named Bewegungsbereich is healthy and enabled.\n\nThe MotionAware configuration itself references a resource with:\n\nrtype: bridge_home\n\nwhile the Hue automation associated with MotionAware correctly targets a normal Hue zone named Flur-Bewegung.\n\nFlur-Bewegung contains the lamps controlled by the MotionAware automation and the associated Hue scenes.\n\nThis may be related to the MotionAware configuration referencing bridge_home rather than a regular Hue room or zone. The traceback shows HueMotionAwareSensor failing while resolving group_id through bridge.api.groups[group_id].\n\nAs a result, setup of the Hue binary sensor platform fails.\n\nThe MotionAware functionality itself continues to work correctly in the Hue app.\n\n### What version of Home Assistant Core has the issue?\n\ncore-2026.9.1\n\n### What was the last working version of Home Assistant Core?\n\n_No response_\n\n### What type of installation are you running?\n\nHome Assistant OS\n\n### Integration causing the issue\n\nPhilips Hue\n\n### Link to integration documentation on our website\n\nhttps://www.home-assistant.io/integrations/hue\n\n### Diagnostics information\n\nPhilips Hue integration diagnostics are available.\n\nRelevant observations from the diagnostics:\n\nMotionAware configuration name: Bewegungsbereich\nResource type: motion_area_configuration\nHealth: healthy\nEnabled: true\nIts associated group has rtype: bridge_home\nIt exposes:\nconvenience_area_motion\nsecurity_area_motion\nThe related Hue lighting automation targets a normal Hue zone named Flur-Bewegung\n\nThe security_area_motion resource is owned by the same motion_area_configuration\n\n### Example YAML snippet\n\n```yaml\n\n```\n\n### Anything in the logs that might be useful for us?\n\n```txt\nTraceback (most recent call last):\n  File \"/usr/src/homeassistant/homeassistant/components/hue/v2/binary_sensor.py\", line 110, in <genexpr>\n    make_binary_sensor_entity(sensor)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^\n  File \"/usr/src/homeassistant/homeassistant/components/hue/v2/binary_sensor.py\", line 238, in __init__\n    self.hue_group = self.bridge.api.groups[group_id]\n                     ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/usr/local/lib/python3.14/site-packages/aiohue/v2/controllers/base.py\", line 366, in __getitem__\n    return next(x for y in self._resources for x in y if x.id == id)\nStopIteration\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/usr/src/homeassistant/homeassistant/helpers/entity_platform.py\", line 499, in _async_setup_platform\n    await asyncio.shield(awaitable)\n  File \"/usr/src/homeassistant/homeassistant/components/hue/binary_sensor.py\", line 21, in async_setup_entry\n    await setup_entry_v2(hass, config_entry, async_add_entities)\n  File \"/usr/src/homeassistant/homeassistant/components/hue/v2/binary_sensor.py\", line 129, in async_setup_entry\n    register_items(api.sensors.security_area_motion, HueMotionAwareSensor)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/src/homeassistant/homeassistant/components/hue/v2/binary_sensor.py\", line 109, in register_items\n    async_add_entities(\n    ~~~~~~~~~~~~~~~~~~^\n        make_binary_sensor_entity(sensor)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        for sensor in controller\n        ^^^^^^^^^^^^^^^^^^^^^^^^\n        if _resource_valid(sensor, controller)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/usr/src/homeassistant/homeassistant/helpers/entity_platform.py\", line 618, in _async_schedule_add_entities_for_entry\n    new_entities if type(new_entities) is list else list(new_entities)\n                                                    ~~~~^^^^^^^^^^^^^^\nRuntimeError: generator raised StopIteration\n\n-------\n-------\n\nmotion_area_configuration\n  name: Bewegungsbereich\n  health: healthy\n  enabled: true\n  group.rtype: bridge_home\n\nservices:\n  convenience_area_motion\n  security_area_motion\n\nHue automation:\n  source.rtype: motion_area_configuration\n  target group.rtype: zone\n```\n\n### Additional information\n\nThe Hue MotionAware setup is valid and functional in the Hue app.\n\nThere are two separate Hue resources involved:\n\nBewegungsbereich is the MotionAware motion_area_configuration\nFlur-Bewegung is the Hue zone containing the lamps controlled by the MotionAware automation and their scenes\n\nThe Hue automation associated with MotionAware correctly references Flur-Bewegung as a normal zone.\n\nThe MotionAware configuration itself references bridge_home.\n\nThe traceback shows that Home Assistant performs the following lookup while creating the MotionAware binary sensor:\n\nself.hue_group = self.bridge.api.groups[group_id]\n\nThis lookup raises StopIteration.\n\nIt is therefore possible that the bridge_home reference is not handled correctly by HueMotionAwareSensor, but I cannot confirm that this is the root cause.\n\nThe important part from the user perspective is that the Hue MotionAware configuration works correctly on the Hue Bridge, while Home Assistant fails during setup of the Hue binary_sensor platform.",
     "created_at": "2026-09-08T09:17:14Z",
     "author": "Orichinal",
     "random_seed_note": "Sampled 30 tickets with fixed seed (random_state=42) from the holdout window strictly after the champion models' training cutoff (2026-08-27T05:00:47Z) up to 2026-10-26T06:15:50Z. None of these tickets were used for model fitting or hyperparameter tuning.",
@@ -889,8 +889,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.951,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -916,8 +916,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.78,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -943,8 +943,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.652,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -970,8 +970,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.732,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -997,14 +997,14 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.45,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
     "number": 183264,
-    "title": "Unavailable MCP connection prevents AI conversation assistant from responding",
-    "body": "### The problem\n\nWhen an MCP connection selected for a Google AI conversation assistant becomes unavailable, the entire conversation fails. The agent cannot answer ordinary questions or use the remaining Assist tools.\n\n### Steps to reproduce:\n- Configure an MCP integration and select it alongside Assist in a AI conversation assistant.\n- Make the MCP server unavailable.\n- Send a message to the conversation agent.\n\n### Actual behavior:\nThe MCP integration reports \u201cError communicating with API: All connection attempts failed.\u201d The conversation agent fails with:\n\n`Error getting LLM API ['assist', 'mcp-<entry_id>'] for google_generative_ai_conversation: API mcp-<entry_id> not found`\nLogger: homeassistant.components.conversation.chat_log\nSource: components/conversation/chat_log.py:695\n\n### Expected behavior:\nAn unavailable MCP connection should not prevent the LLM from responding. Home Assistant should skip its tools, retain the available Assist and other MCP tools, and automatically include the unavailable connection again when it recovers. \n\n### What version of Home Assistant Core has the issue?\n\n2026.9.3\n\n### What was the last working version of Home Assistant Core?\n\n_No response_\n\n### What type of installation are you running?\n\nHome Assistant OS\n\n### Integration causing the issue\n\nmcp\n\n### Link to integration documentation on our website\n\n_No response_\n\n### Diagnostics information\n\n_No response_\n\n### Example YAML snippet\n\n```yaml\n\n```\n\n### Anything in the logs that might be useful for us?\n\n```txt\n\n```\n\n### Additional information\n\n_No response_",
+    "title": "Unavailable MCP connection prevents Gemini conversation agent from responding",
+    "body": "### The problem\n\nWhen an MCP connection selected for a Google Gemini conversation agent becomes unavailable, the entire conversation fails. The agent cannot answer ordinary questions or use the remaining Assist tools.\n\n### Steps to reproduce:\n- Configure an MCP integration and select it alongside Assist in a Gemini conversation agent.\n- Make the MCP server unavailable.\n- Send a message to the conversation agent.\n\n### Actual behavior:\nThe MCP integration reports \u201cError communicating with API: All connection attempts failed.\u201d The conversation agent fails with:\n\n`Error getting LLM API ['assist', 'mcp-<entry_id>'] for google_generative_ai_conversation: API mcp-<entry_id> not found`\nLogger: homeassistant.components.conversation.chat_log\nSource: components/conversation/chat_log.py:695\n\n### Expected behavior:\nAn unavailable MCP connection should not prevent the LLM from responding. Home Assistant should skip its tools, retain the available Assist and other MCP tools, and automatically include the unavailable connection again when it recovers. \n\n### What version of Home Assistant Core has the issue?\n\n2026.9.3\n\n### What was the last working version of Home Assistant Core?\n\n_No response_\n\n### What type of installation are you running?\n\nHome Assistant OS\n\n### Integration causing the issue\n\nmcp\n\n### Link to integration documentation on our website\n\n_No response_\n\n### Diagnostics information\n\n_No response_\n\n### Example YAML snippet\n\n```yaml\n\n```\n\n### Anything in the logs that might be useful for us?\n\n```txt\n\n```\n\n### Additional information\n\n_No response_",
     "created_at": "2026-09-27T08:07:09Z",
     "author": "Schroedi",
     "random_seed_note": "Sampled 30 tickets with fixed seed (random_state=42) from the holdout window strictly after the champion models' training cutoff (2026-08-27T05:00:47Z) up to 2026-10-26T06:15:50Z. None of these tickets were used for model fitting or hyperparameter tuning.",
@@ -1024,8 +1024,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.82,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1053,8 +1053,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": true,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.518,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1080,8 +1080,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.675,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1107,8 +1107,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.536,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1134,8 +1134,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.407,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1163,8 +1163,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": true,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.707,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1190,14 +1190,14 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.516,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
     "number": 184979,
     "title": "Expose Insteon controller input commands as event entities (revive and extend #168861)",
-    "body": "### The problem\n\nThe Insteon integration currently exposes controller-originated button commands\nas raw Home Assistant event-bus events. For example:\n\n```yaml\ntriggers:\n  - trigger: event\n    event_type: insteon.button_on\n    event_data:\n      address: 53454a\n      button: g\n```\n\nCreating this trigger requires an operator to discover and manually enter an\nInsteon protocol address, normalize it to lowercase without punctuation, and\nknow the button/group mapping. Reviewing the automation later requires manually\nreverse-resolving the address to a Home Assistant device.\n\nThe visual automation editor does not provide an Insteon device or entity\nselector for these raw events. Selecting an existing KeypadLinc button entity\nonly offers state-based triggers, but the state of that switch entity represents\nthe keypad LED/state\u2014not necessarily a physical button command. It can also\nchange because of startup restoration, Insteon polling, or an automation\nsynchronizing the LED.\n\nThis also complicates otherwise simple synchronization automations. For\nexample, keeping two controls synchronized requires distinguishing a physical\nbutton command from a state change caused by the synchronization automation\nitself. With only state entities available, users often resort to inspecting\nevent-context fields such as `parent_id` and `user_id`, or adding other guards,\nto infer the cause and prevent feedback loops. Those heuristics are difficult\nto understand, are easy to get wrong, and may also match integration polling or\nstartup restoration. A controller event entity would provide a direct trigger\nfor physical input while leaving programmatic state changes on the\nstateful entity path.\n\nThis distinction can have physical consequences. In one observed case after a\nHome Assistant Core update, Insteon startup polling changed two KeypadLinc\nbutton entities from `off` to `on`. Automations that were forced to infer a\nphysical press from those state changes opened two groups of motorized shades.\nThe shades had restored correctly as closed; the false actuation occurred about\nfive minutes later when the Insteon keypad states were polled.\n\n### Proposed behavior\n\nExpose controller-originated physical input commands as Home Assistant event\nentities associated with the corresponding registered Insteon device and\nbutton/group.\n\nFor example, a KeypadLinc button could expose an entity such as:\n\n```text\nevent.kit_keypad_button_g\n```\n\nIn the visual automation editor, one should be able to select the Insteon\ndevice or event entity under **By target**, choose **Event received**, and then\nchoose a supported command. Setting this up should not require discovering or entering an\nInsteon address or group number.\n\nThe existing stateful entity should continue to represent the controllable load\nor keypad LED, while the event entity represents physical user intent:\n\n| Entity | Meaning |\n|---|---|\n| `switch.*` / `light.*` | Current load or keypad LED state; may be changed by polling, restoration, or services |\n| `event.*` | A controller-originated physical input command was received |\n\nExisting raw `insteon.*` bus events should remain available for backward\ncompatibility. They do not need to be deprecated as part of this proposal.\n\n### Controller-command scope\n\nThe event-entity implementation should cover the complete controller-oriented\nuser-input command family where supported by the physical device:\n\n| User-facing event | Current PyInsteon name/topic | Protocol command |\n|---|---|---:|\n| On | `on_event` / `on` | `0x11` |\n| Fast on | `on_fast_event` / `on_fast` | `0x12` |\n| Off | `off_event` / `off` | `0x13` |\n| Fast off | `off_fast_event` / `off_fast` | `0x14` |\n| Brighten one step | `brighten_one_step` | `0x15` |\n| Dim one step | `dim_one_step` | `0x16` |\n| Start dimming | `start_manual_change_down` | `0x17`, direction `0x00` |\n| Start brightening | `start_manual_change_up` | `0x17`, direction `0x01` |\n| Stop manual change | `stop_manual_change` | `0x18` |\n\nThis should apply to controller-capable Insteon devices such as KeypadLinc\nbuttons, SwitchLinc paddles, Mini-Remotes, and other devices that emit the same\ncommands.\n\nThe exact event types may retain the protocol-oriented names or use translated\nuser-facing labels, but the event data model must preserve direction and command\nsemantics. Fast on/off are not interchangeable generic double-clicks, and start\nbrightening/dimming must remain distinguishable.\n\n### Current PyInsteon limitation\n\nCurrent PyInsteon exposes `on_event`, `off_event`, `on_fast_event`, and\n`off_fast_event` through its subscribable `Event` API. Home Assistant maps those\nto:\n\n- `insteon.button_on`\n- `insteon.button_off`\n- `insteon.button_on_fast`\n- `insteon.button_off_fast`\n\nPyInsteon recognizes the step and manual-change protocol topics listed above,\nbut does not currently publish them through its device `Event` API. In\nparticular, the current dimmable-device handler listens for\n`stop_manual_change` only to request a fresh device status. Supporting the full\nevent-entity command set will therefore require a coordinated PyInsteon change\nto expose the step and start/stop manual-change commands as subscribable events.\n\nIt would be reasonable to deliver this incrementally: first restore the four\nevent types already implemented in the abandoned event-entity PR, then add the\nPyInsteon prerequisite and remaining event types without changing the intended\nentity model.\n\n### Why event entities\n\nEvent entities are the Home Assistant model for momentary occurrences such as\nphysical button and remote-control input. They integrate with the purpose-\nspecific **Event received** trigger and allow the editor to expose declared\nevent types through standard selectors.\n\nPersistent conditions such as wet/dry, low battery, open/closed, motion, and\nload state are intentionally outside this proposal. Those are already modeled\nappropriately as binary sensors, sensors, switches, lights, or other stateful\nentities.\n\n### Example use cases\n\n1. Safely control shades from a KeypadLinc button without treating restored or\n   polled LED state as a physical press.\n2. Use a SwitchLinc paddle to control a non-Insteon dimmable light: start a\n   repeated brightness adjustment on `start_manual_change_up/down`, then stop it\n   on `stop_manual_change`.\n3. Configure Mini-Remote buttons through the visual automation editor without\n   copying protocol addresses into YAML.\n\n### Related prior work\n\n- [#168861 \u2014 Add Button Event Entities for Insteon devices](https://github.com/home-assistant/core/pull/168861)\n  implemented event entities for `on`, `off`, `on_fast`, and `off_fast`, tests,\n  translations, and KeypadLinc button entities. It received substantive review\n  but was automatically closed as stale on July 5, 2026; it was not rejected on\n  architectural grounds.\n- [#168663 \u2014 Improve/fix Insteon event handling](https://github.com/home-assistant/core/pull/168663)\n  was the precursor. Its review explicitly recommended event entities, and it\n  was closed in favor of #168861.\n- [#134232 \u2014 Insteon Events do not provide entity_ids](https://github.com/home-assistant/core/issues/134232)\n  documents the usability problem of raw address/group event payloads. It was\n  closed as stale/not planned without a replacement workflow.\n\nOne concern raised during #168861 was that migrating users before the purpose-\nspecific **Event received** trigger shipped would force an awkward intermediate\nstate-trigger workflow. That trigger is now available, so the intended user\nexperience can be implemented directly. This proposal does not require removal\nor deprecation of the legacy event bus interface.\n\nThis direction also matches current Home Assistant developer guidance. The\n[integration event guidance](https://developers.home-assistant.io/docs/integration_events/)\nencourages integrations to publish device occurrences as event entities rather\nthan directly exposing only raw event-bus events, because event entities are\neasier for users to browse and identify. The older\n[device-trigger guidance](https://developers.home-assistant.io/docs/device_automation_trigger/)\nnow warns that Home Assistant is exploring alternatives to device automations\nand that new device-automation implementations will not be accepted. Event\nentities therefore provide the supported, forward-looking way to add standard\nselectors and the purpose-specific **Event received** workflow without creating\na new Insteon device-trigger mechanism.\n\n### Suggested acceptance criteria\n\n- Insteon controller buttons/groups expose event entities associated with their\n  existing Home Assistant devices.\n- The **Event received** trigger presents translated event-type choices.\n- Creating an automation requires no manual Insteon address or group entry.\n- A load or LED state restoration/poll does not generate a physical-input event.\n- KeypadLinc sub-buttons remain independently selectable.\n- Mini-Remotes and other controller-only devices are represented in the device\n  and entity registries sufficiently to select their event entities.\n- `on`, `off`, `on_fast`, and `off_fast` are supported using the existing\n  PyInsteon event API.\n- Step and manual-change commands are supported after the corresponding\n  PyInsteon event API is added.\n- Existing raw `insteon.*` events remain backward compatible.\n- Tests cover lifecycle subscription/unsubscription, duplicate Insteon\n  broadcast/cleanup suppression, device/button identity, and all supported\n  command types.",
+    "body": "### The problem\n\nThe Insteon integration currently exposes controller-originated button commands\nas raw Home Assistant event-bus events. For example:\n\n```yaml\ntriggers:\n  - trigger: event\n    event_type: insteon.button_on\n    event_data:\n      address: 53454a\n      button: g\n```\n\nCreating this trigger requires the user to discover and manually enter an\nInsteon protocol address, normalize it to lowercase without punctuation, and\nknow the button/group mapping. Reviewing the automation later requires manually\nreverse-resolving the address to a Home Assistant device.\n\nThe visual automation editor does not provide an Insteon device or entity\nselector for these raw events. Selecting an existing KeypadLinc button entity\nonly offers state-based triggers, but the state of that switch entity represents\nthe keypad LED/state\u2014not necessarily a physical button command. It can also\nchange because of startup restoration, Insteon polling, or an automation\nsynchronizing the LED.\n\nThis also complicates otherwise simple synchronization automations. For\nexample, keeping two controls synchronized requires distinguishing a physical\nbutton command from a state change caused by the synchronization automation\nitself. With only state entities available, users often resort to inspecting\nevent-context fields such as `parent_id` and `user_id`, or adding other guards,\nto infer the cause and prevent feedback loops. Those heuristics are difficult\nto understand, are easy to get wrong, and may also match integration polling or\nstartup restoration. A controller event entity would provide a direct trigger\nfor physical user input while leaving programmatic state changes on the\nstateful entity path.\n\nThis distinction can have physical consequences. In one observed case after a\nHome Assistant Core update, Insteon startup polling changed two KeypadLinc\nbutton entities from `off` to `on`. Automations that were forced to infer a\nphysical press from those state changes opened two groups of motorized shades.\nThe shades had restored correctly as closed; the false actuation occurred about\nfive minutes later when the Insteon keypad states were polled.\n\n### Proposed behavior\n\nExpose controller-originated physical input commands as Home Assistant event\nentities associated with the corresponding registered Insteon device and\nbutton/group.\n\nFor example, a KeypadLinc button could expose an entity such as:\n\n```text\nevent.kit_keypad_button_g\n```\n\nIn the visual automation editor, the user should be able to select the Insteon\ndevice or event entity under **By target**, choose **Event received**, and then\nchoose a supported command. The user should not need to discover or enter an\nInsteon address or group number.\n\nThe existing stateful entity should continue to represent the controllable load\nor keypad LED, while the event entity represents physical user intent:\n\n| Entity | Meaning |\n|---|---|\n| `switch.*` / `light.*` | Current load or keypad LED state; may be changed by polling, restoration, or services |\n| `event.*` | A controller-originated physical input command was received |\n\nExisting raw `insteon.*` bus events should remain available for backward\ncompatibility. They do not need to be deprecated as part of this proposal.\n\n### Controller-command scope\n\nThe event-entity implementation should cover the complete controller-oriented\nuser-input command family where supported by the physical device:\n\n| User-facing event | Current PyInsteon name/topic | Protocol command |\n|---|---|---:|\n| On | `on_event` / `on` | `0x11` |\n| Fast on | `on_fast_event` / `on_fast` | `0x12` |\n| Off | `off_event` / `off` | `0x13` |\n| Fast off | `off_fast_event` / `off_fast` | `0x14` |\n| Brighten one step | `brighten_one_step` | `0x15` |\n| Dim one step | `dim_one_step` | `0x16` |\n| Start dimming | `start_manual_change_down` | `0x17`, direction `0x00` |\n| Start brightening | `start_manual_change_up` | `0x17`, direction `0x01` |\n| Stop manual change | `stop_manual_change` | `0x18` |\n\nThis should apply to controller-capable Insteon devices such as KeypadLinc\nbuttons, SwitchLinc paddles, Mini-Remotes, and other devices that emit the same\ncommands.\n\nThe exact event types may retain the protocol-oriented names or use translated\nuser-facing labels, but the event data model must preserve direction and command\nsemantics. Fast on/off are not interchangeable generic double-clicks, and start\nbrightening/dimming must remain distinguishable.\n\n### Current PyInsteon limitation\n\nCurrent PyInsteon exposes `on_event`, `off_event`, `on_fast_event`, and\n`off_fast_event` through its subscribable `Event` API. Home Assistant maps those\nto:\n\n- `insteon.button_on`\n- `insteon.button_off`\n- `insteon.button_on_fast`\n- `insteon.button_off_fast`\n\nPyInsteon recognizes the step and manual-change protocol topics listed above,\nbut does not currently publish them through its device `Event` API. In\nparticular, the current dimmable-device handler listens for\n`stop_manual_change` only to request a fresh device status. Supporting the full\nevent-entity command set will therefore require a coordinated PyInsteon change\nto expose the step and start/stop manual-change commands as subscribable events.\n\nIt would be reasonable to deliver this incrementally: first restore the four\nevent types already implemented in the abandoned event-entity PR, then add the\nPyInsteon prerequisite and remaining event types without changing the intended\nentity model.\n\n### Why event entities\n\nEvent entities are the Home Assistant model for momentary occurrences such as\nphysical button and remote-control input. They integrate with the purpose-\nspecific **Event received** trigger and allow the editor to expose declared\nevent types through standard selectors.\n\nPersistent conditions such as wet/dry, low battery, open/closed, motion, and\nload state are intentionally outside this proposal. Those are already modeled\nappropriately as binary sensors, sensors, switches, lights, or other stateful\nentities.\n\n### Example use cases\n\n1. Safely control shades from a KeypadLinc button without treating restored or\n   polled LED state as a physical press.\n2. Use a SwitchLinc paddle to control a non-Insteon dimmable light: start a\n   repeated brightness adjustment on `start_manual_change_up/down`, then stop it\n   on `stop_manual_change`.\n3. Configure Mini-Remote buttons through the visual automation editor without\n   copying protocol addresses into YAML.\n\n### Related prior work\n\n- [#168861 \u2014 Add Button Event Entities for Insteon devices](https://github.com/home-assistant/core/pull/168861)\n  implemented event entities for `on`, `off`, `on_fast`, and `off_fast`, tests,\n  translations, and KeypadLinc button entities. It received substantive review\n  but was automatically closed as stale on July 5, 2026; it was not rejected on\n  architectural grounds.\n- [#168663 \u2014 Improve/fix Insteon event handling](https://github.com/home-assistant/core/pull/168663)\n  was the precursor. Its review explicitly recommended event entities, and it\n  was closed in favor of #168861.\n- [#134232 \u2014 Insteon Events do not provide entity_ids](https://github.com/home-assistant/core/issues/134232)\n  documents the usability problem of raw address/group event payloads. It was\n  closed as stale/not planned without a replacement workflow.\n\nOne concern raised during #168861 was that migrating users before the purpose-\nspecific **Event received** trigger shipped would force an awkward intermediate\nstate-trigger workflow. That trigger is now available, so the intended user\nexperience can be implemented directly. This proposal does not require removal\nor deprecation of the legacy event bus interface.\n\nThis direction also matches current Home Assistant developer guidance. The\n[integration event guidance](https://developers.home-assistant.io/docs/integration_events/)\nencourages integrations to publish device occurrences as event entities rather\nthan directly exposing only raw event-bus events, because event entities are\neasier for users to browse and identify. The older\n[device-trigger guidance](https://developers.home-assistant.io/docs/device_automation_trigger/)\nnow warns that Home Assistant is exploring alternatives to device automations\nand that new device-automation implementations will not be accepted. Event\nentities therefore provide the supported, forward-looking way to add standard\nselectors and the purpose-specific **Event received** workflow without creating\na new Insteon device-trigger mechanism.\n\n### Suggested acceptance criteria\n\n- Insteon controller buttons/groups expose event entities associated with their\n  existing Home Assistant devices.\n- The **Event received** trigger presents translated event-type choices.\n- Creating an automation requires no manual Insteon address or group entry.\n- A load or LED state restoration/poll does not generate a physical-input event.\n- KeypadLinc sub-buttons remain independently selectable.\n- Mini-Remotes and other controller-only devices are represented in the device\n  and entity registries sufficiently to select their event entities.\n- `on`, `off`, `on_fast`, and `off_fast` are supported using the existing\n  PyInsteon event API.\n- Step and manual-change commands are supported after the corresponding\n  PyInsteon event API is added.\n- Existing raw `insteon.*` events remain backward compatible.\n- Tests cover lifecycle subscription/unsubscription, duplicate Insteon\n  broadcast/cleanup suppression, device/button identity, and all supported\n  command types.",
     "created_at": "2026-10-08T18:27:10Z",
     "author": "dduff617",
     "random_seed_note": "Sampled 30 tickets with fixed seed (random_state=42) from the holdout window strictly after the champion models' training cutoff (2026-08-27T05:00:47Z) up to 2026-10-26T06:15:50Z. None of these tickets were used for model fitting or hyperparameter tuning.",
@@ -1217,8 +1217,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.671,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1244,14 +1244,14 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.855,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
     "number": 185442,
     "title": "ElevenLabs TTS entity stays unavailable after a ConnectError at startup (platform setup never retried)",
-    "body": "### The problem\n\nIf the ElevenLabs API can't be reached while the TTS platform is being set up (here: during HA startup, when several cloud integrations were timing out together), `tts.elevenlabs_text_to_speech` is never created. The config entry still shows **Loaded**, nothing retries, and the entity stays unavailable until the entry is reloaded by hand. A reload a few minutes later works at once.\n\nSeen at two boots on 2026-10-08 (17:31 and 22:15).\n\nWhy it doesn't retry, from the 2026.10.0 source:\n\n- `elevenlabs/__init__.py` `async_setup_entry` catches `httpx.ConnectError` only around `get_model_by_id()` (`client.models.list()`) and turns it into `ConfigEntryNotReady`. That call succeeded, so the entry finished setup and forwarded its platforms.\n- `elevenlabs/tts.py` line 68, in the platform's `async_setup_entry`, then calls `client.voices.get_all()` with no exception handling.\n- The `ConnectError` reaches `EntityPlatform._async_setup_platform()`'s generic `except Exception`, which logs `Error while setting up elevenlabs platform for tts` and returns `False`. Only `PlatformNotReady` schedules a retry there, so the platform is never set up again, and the already-loaded entry doesn't notice.\n- In the 17:31 case `voices.get_all()` hung past `SLOW_SETUP_MAX_WAIT`, so the platform hit the `TimeoutError` branch (\"Startup will proceed without waiting any longer\") and returned `False`; the shielded call then failed with the same `ConnectError` a few seconds later. Same result: no entity, no retry.\n\n`tts.py` on `dev` (checked 2026-10-09) still has the unguarded call.\n\nPossible fix: fetch the voices in `__init__.py` inside the existing `try` (so a `ConnectError` raises `ConfigEntryNotReady` and the entry retries with backoff) and pass them through `runtime_data`, or catch `ConnectError` at `tts.py:68` and raise `PlatformNotReady`. The first fits the pattern `entity_platform` asks for: it logs an error if a forwarded platform raises `ConfigEntryNotReady`.\n\n### What version of Home Assistant Core has the issue?\n\ncore-2026.10.0\n\n### What was the last working version of Home Assistant Core?\n\nUnknown. The unguarded `voices.get_all()` call is not new; it only bites when the API is unreachable at the moment the platform sets up.\n\n### What type of installation are you running?\n\nHome Assistant OS (18.3, Home Assistant Green)\n\n### Integration causing the issue\n\nElevenLabs\n\n### Link to integration documentation on our website\n\nhttps://www.home-assistant.io/integrations/elevenlabs/\n\n### Diagnostics information\n\nNot available; the integration has no diagnostics platform.\n\n### Example YAML snippet\n\nN/A (UI config entry)\n\n### Anything in the logs that might be useful for us?\n\n22:15 boot:\n\n```txt\n2026-10-08 22:15:52.735 WARNING (MainThread) [homeassistant.components.tts] Setup of tts platform elevenlabs is taking over 10 seconds.\n2026-10-08 22:15:58.521 ERROR (MainThread) [homeassistant.components.tts] Error while setting up elevenlabs platform for tts: \nTraceback (most recent call last):\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_transports/default.py\", line 101, in map_httpcore_exceptions\n    yield\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_transports/default.py\", line 394, in handle_async_request\n    resp = await self._pool.handle_async_request(req)\n  ...\n  File \"/usr/local/lib/python3.14/site-packages/httpcore/_exceptions.py\", line 14, in map_exceptions\n    raise to_exc(exc) from exc\nhttpcore.ConnectError\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/usr/src/homeassistant/homeassistant/helpers/entity_platform.py\", line 499, in _async_setup_platform\n    await asyncio.shield(awaitable)\n  File \"/usr/src/homeassistant/homeassistant/components/elevenlabs/tts.py\", line 68, in async_setup_entry\n    voices = (await client.voices.get_all()).voices\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.14/site-packages/elevenlabs/voices/client.py\", line 655, in get_all\n    _response = await self._raw_client.get_all(show_legacy=show_legacy, request_options=request_options)\n  File \"/usr/local/lib/python3.14/site-packages/elevenlabs/voices/raw_client.py\", line 696, in get_all\n    _response = await self._client_wrapper.httpx_client.request(\n  File \"/usr/local/lib/python3.14/site-packages/elevenlabs/core/http_client.py\", line 477, in request\n    response = await self.httpx_client.request(\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_client.py\", line 1540, in request\n    return await self.send(request, auth=auth, follow_redirects=follow_redirects)\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_client.py\", line 1629, in send\n    response = await self._send_handling_auth(\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_client.py\", line 1657, in _send_handling_auth\n    response = await self._send_handling_redirects(\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_client.py\", line 1694, in _send_handling_redirects\n    response = await self._send_single_request(request)\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_client.py\", line 1730, in _send_single_request\n    response = await transport.handle_async_request(request)\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_transports/default.py\", line 393, in handle_async_request\n    with map_httpcore_exceptions():\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_transports/default.py\", line 118, in map_httpcore_exceptions\n    raise mapped_exc(message) from exc\nhttpx.ConnectError\n```\n\n17:31 boot:\n\n```txt\n2026-10-08 17:31:09.634 WARNING (MainThread) [homeassistant.components.tts] Setup of tts platform elevenlabs is taking over 10 seconds.\n2026-10-08 17:31:34.687 ERROR (MainThread) [homeassistant.components.tts] Setup of platform elevenlabs is taking longer than 60 seconds. Startup will proceed without waiting any longer.\n2026-10-08 17:31:42.970 ERROR (MainThread) [homeassistant] Error doing job: ConnectError exception in shielded future (task: None)\nTraceback (most recent call last):\n  ...\nhttpx.ConnectError\n  (same chain as above: elevenlabs/tts.py line 68 \u2192 voices.get_all \u2192 httpx)\n```\n\n### Additional information\n\n- Other cloud calls failed in the same seconds (Alexa cloud sync timeout, Sonos subscription timeouts, Ring check-in), so the network or DNS was briefly unreachable during boot. That outage is on my side; the issue is that ElevenLabs doesn't recover from it.\n- After a manual reload of the entry the entity came back at once.\n- Related but different: #181794 (entity flapping after an options change, closed 2026-10-07).\n",
+    "body": "> **AI disclosure:** This issue was written by Claude (Anthropic's AI model, running in Claude Code) at my request. Claude also did the investigation behind it: reading the logs, profiling, and reading the Home Assistant source. I reviewed it before posting. The measurements and logs are from my own Home Assistant system.\n\n### The problem\n\nIf the ElevenLabs API can't be reached while the TTS platform is being set up (here: during HA startup, when several cloud integrations were timing out together), `tts.elevenlabs_text_to_speech` is never created. The config entry still shows **Loaded**, nothing retries, and the entity stays unavailable until the entry is reloaded by hand. A reload a few minutes later works at once.\n\nSeen at two boots on 2026-10-08 (17:31 and 22:15).\n\nWhy it doesn't retry, from the 2026.10.0 source:\n\n- `elevenlabs/__init__.py` `async_setup_entry` catches `httpx.ConnectError` only around `get_model_by_id()` (`client.models.list()`) and turns it into `ConfigEntryNotReady`. That call succeeded, so the entry finished setup and forwarded its platforms.\n- `elevenlabs/tts.py` line 68, in the platform's `async_setup_entry`, then calls `client.voices.get_all()` with no exception handling.\n- The `ConnectError` reaches `EntityPlatform._async_setup_platform()`'s generic `except Exception`, which logs `Error while setting up elevenlabs platform for tts` and returns `False`. Only `PlatformNotReady` schedules a retry there, so the platform is never set up again, and the already-loaded entry doesn't notice.\n- In the 17:31 case `voices.get_all()` hung past `SLOW_SETUP_MAX_WAIT`, so the platform hit the `TimeoutError` branch (\"Startup will proceed without waiting any longer\") and returned `False`; the shielded call then failed with the same `ConnectError` a few seconds later. Same result: no entity, no retry.\n\n`tts.py` on `dev` (checked 2026-10-09) still has the unguarded call.\n\nPossible fix: fetch the voices in `__init__.py` inside the existing `try` (so a `ConnectError` raises `ConfigEntryNotReady` and the entry retries with backoff) and pass them through `runtime_data`, or catch `ConnectError` at `tts.py:68` and raise `PlatformNotReady`. The first fits the pattern `entity_platform` asks for: it logs an error if a forwarded platform raises `ConfigEntryNotReady`.\n\n### What version of Home Assistant Core has the issue?\n\ncore-2026.10.0\n\n### What was the last working version of Home Assistant Core?\n\nUnknown. The unguarded `voices.get_all()` call is not new; it only bites when the API is unreachable at the moment the platform sets up.\n\n### What type of installation are you running?\n\nHome Assistant OS (18.3, Home Assistant Green)\n\n### Integration causing the issue\n\nElevenLabs\n\n### Link to integration documentation on our website\n\nhttps://www.home-assistant.io/integrations/elevenlabs/\n\n### Diagnostics information\n\nNot available; the integration has no diagnostics platform.\n\n### Example YAML snippet\n\nN/A (UI config entry)\n\n### Anything in the logs that might be useful for us?\n\n22:15 boot:\n\n```txt\n2026-10-08 22:15:52.735 WARNING (MainThread) [homeassistant.components.tts] Setup of tts platform elevenlabs is taking over 10 seconds.\n2026-10-08 22:15:58.521 ERROR (MainThread) [homeassistant.components.tts] Error while setting up elevenlabs platform for tts: \nTraceback (most recent call last):\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_transports/default.py\", line 101, in map_httpcore_exceptions\n    yield\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_transports/default.py\", line 394, in handle_async_request\n    resp = await self._pool.handle_async_request(req)\n  ...\n  File \"/usr/local/lib/python3.14/site-packages/httpcore/_exceptions.py\", line 14, in map_exceptions\n    raise to_exc(exc) from exc\nhttpcore.ConnectError\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/usr/src/homeassistant/homeassistant/helpers/entity_platform.py\", line 499, in _async_setup_platform\n    await asyncio.shield(awaitable)\n  File \"/usr/src/homeassistant/homeassistant/components/elevenlabs/tts.py\", line 68, in async_setup_entry\n    voices = (await client.voices.get_all()).voices\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.14/site-packages/elevenlabs/voices/client.py\", line 655, in get_all\n    _response = await self._raw_client.get_all(show_legacy=show_legacy, request_options=request_options)\n  File \"/usr/local/lib/python3.14/site-packages/elevenlabs/voices/raw_client.py\", line 696, in get_all\n    _response = await self._client_wrapper.httpx_client.request(\n  File \"/usr/local/lib/python3.14/site-packages/elevenlabs/core/http_client.py\", line 477, in request\n    response = await self.httpx_client.request(\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_client.py\", line 1540, in request\n    return await self.send(request, auth=auth, follow_redirects=follow_redirects)\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_client.py\", line 1629, in send\n    response = await self._send_handling_auth(\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_client.py\", line 1657, in _send_handling_auth\n    response = await self._send_handling_redirects(\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_client.py\", line 1694, in _send_handling_redirects\n    response = await self._send_single_request(request)\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_client.py\", line 1730, in _send_single_request\n    response = await transport.handle_async_request(request)\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_transports/default.py\", line 393, in handle_async_request\n    with map_httpcore_exceptions():\n  File \"/usr/local/lib/python3.14/site-packages/httpx/_transports/default.py\", line 118, in map_httpcore_exceptions\n    raise mapped_exc(message) from exc\nhttpx.ConnectError\n```\n\n17:31 boot:\n\n```txt\n2026-10-08 17:31:09.634 WARNING (MainThread) [homeassistant.components.tts] Setup of tts platform elevenlabs is taking over 10 seconds.\n2026-10-08 17:31:34.687 ERROR (MainThread) [homeassistant.components.tts] Setup of platform elevenlabs is taking longer than 60 seconds. Startup will proceed without waiting any longer.\n2026-10-08 17:31:42.970 ERROR (MainThread) [homeassistant] Error doing job: ConnectError exception in shielded future (task: None)\nTraceback (most recent call last):\n  ...\nhttpx.ConnectError\n  (same chain as above: elevenlabs/tts.py line 68 \u2192 voices.get_all \u2192 httpx)\n```\n\n### Additional information\n\n- Other cloud calls failed in the same seconds (Alexa cloud sync timeout, Sonos subscription timeouts, Ring check-in), so the network or DNS was briefly unreachable during boot. That outage is on my side; the issue is that ElevenLabs doesn't recover from it.\n- After a manual reload of the entry the entity came back at once.\n- Related but different: #181794 (entity flapping after an options change, closed 2026-10-07).\n",
     "created_at": "2026-10-09T12:43:52Z",
     "author": "comdygas2",
     "random_seed_note": "Sampled 30 tickets with fixed seed (random_state=42) from the holdout window strictly after the champion models' training cutoff (2026-08-27T05:00:47Z) up to 2026-10-26T06:15:50Z. None of these tickets were used for model fitting or hyperparameter tuning.",
@@ -1271,8 +1271,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.655,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1298,14 +1298,14 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.862,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
     "number": 185529,
     "title": "UniFi: configured UDM Pro Max still offered as a new discovery after #180343 (announced_ips is empty)",
-    "body": "### The problem\n\nAfter #180343 (released in 2026.10.0), the UniFi discovery prompt for a console that is already configured still comes back, because `announced_ips` is empty for my UDM Pro Max and the fix has nothing to match against.\n\nSetup: UDM Pro Max with several VLAN interfaces, one UniFi Network entry created by hand (`source: user`, host `192.168.0.1`). Home Assistant sits on another VLAN, so the scan hears the console at `192.168.80.1`. This is the case from #177083, where I commented that I would verify after release.\n\nWhat happened: on 2026.9.x the discovery flow stood for weeks. Home Assistant is now on 2026.10.0 (Core restarted on 2026-10-09), so the flow was recreated by the new code and is still listed (`config_entries/flow/progress`: `unifi`, `integration_discovery`, host `192.168.80.1`). The MAC-first abort did not fire either, so the entry is not keyed by the console's MAC (an entry created through the manual UI flow is not).\n\nWhat I measured: with `homeassistant.components.unifi_discovery.discovery` at debug, four consecutive hourly scans logged the same record for the console. `ip_info`, `primary_addr` and `addr_entry` are all `None`, and `echoed` is `True`. The record's remaining data (`platform`, services, direct-connect domain) looks like it came from the console's HTTP probe. So `_announced_ips()` returns `[]`, `known_hosts` is only `{source_ip, direct_connect_domain}`, and the entry's host `192.168.0.1` matches neither.\n\nCaveat: I only know what Home Assistant receives. I have not captured the wire, so I cannot say whether this console sent no address list or whether it did not reach the VLAN Home Assistant is on.\n\nWhat I expected: no discovery flow for a console that already has a configured entry.\n\nSuggestion, not a request for a specific design: the device registry already knows this console's MAC for the configured entry. The gateway device the UniFi entry registered carries a `mac` connection equal to the discovered `hw_addr`. Comparing `hw_addr` with the MAC connections of devices that belong to existing `unifi` entries would work without `ip_info`. It relates to uilibs/unifi-discovery#158, which proposes exposing the announced addresses; that cannot help when none arrive.\n\nWorkaround in use: ignoring the discovery (`config_entries/ignore_flow`).\n\n### What version of Home Assistant Core has the issue?\n\ncore-2026.10.0\n\n### What was the last working version of Home Assistant Core?\n\n_No response_\n\n### What type of installation are you running?\n\nHome Assistant OS\n\n### Integration causing the issue\n\nUniFi Network\n\n### Link to integration documentation on our website\n\nhttps://www.home-assistant.io/integrations/unifi/\n\n### Diagnostics information\n\n_No response_\n\n### Example YAML snippet\n\n_No response_\n\n### Anything in the logs that might be useful for us?\n\n```txt\n[homeassistant.components.unifi_discovery.discovery] Found devices: [UnifiDevice(source_ip='192.168.80.1', hw_addr='<console MAC>', ip_info=None, addr_entry=None, fw_version=None, mac_address=None, ..., platform='UDMPROMAX', model=None, ..., signature_version=None, services=mappingproxy({<UnifiService.Protect: 1>: True, <UnifiService.Network: 2>: True, <UnifiService.Access: 3>: False}), direct_connect_domain='<redacted>', device_id='<redacted>', guid='<redacted>', primary_addr=None, is_managed=None, ..., product_name=None, version=None, echoed=True)]\n```\n\nFields shown as `...` and identifiers shown in angle brackets were removed by me; the other values are as logged.\n\n### Additional information\n\nUniFi Network application 10.6.106 as of 2026-09-27, UDM Pro Max. Related: #177083, #180343, uilibs/unifi-discovery#158.\n",
+    "body": "### The problem\n\nAfter #180343 (released in 2026.10.0), the UniFi discovery prompt for a console that is already configured still comes back, because `announced_ips` is empty for my UDM Pro Max and the fix has nothing to match against.\n\nSetup: UDM Pro Max with several VLAN interfaces, one UniFi Network entry created by hand (`source: user`, host `192.168.0.1`). Home Assistant sits on another VLAN, so the scan hears the console at `192.168.80.1`. This is the case from #177083, where I commented that I would verify after release.\n\nWhat happened: on 2026.9.x the discovery flow stood for weeks. Home Assistant is now on 2026.10.0 (Core restarted on 2026-10-09), so the flow was recreated by the new code and is still listed (`config_entries/flow/progress`: `unifi`, `integration_discovery`, host `192.168.80.1`). The MAC-first abort did not fire either, so the entry is not keyed by the console's MAC (an entry created through the user flow is not).\n\nWhat I measured: with `homeassistant.components.unifi_discovery.discovery` at debug, four consecutive hourly scans logged the same record for the console. `ip_info`, `primary_addr` and `addr_entry` are all `None`, and `echoed` is `True`. The record's remaining data (`platform`, services, direct-connect domain) looks like it came from the console's HTTP probe. So `_announced_ips()` returns `[]`, `known_hosts` is only `{source_ip, direct_connect_domain}`, and the entry's host `192.168.0.1` matches neither.\n\nCaveat: I only know what Home Assistant receives. I have not captured the wire, so I cannot say whether this console sent no address list or whether it did not reach the VLAN Home Assistant is on.\n\nWhat I expected: no discovery flow for a console that already has a configured entry.\n\nSuggestion, not a request for a specific design: the device registry already knows this console's MAC for the configured entry. The gateway device the UniFi entry registered carries a `mac` connection equal to the discovered `hw_addr`. Comparing `hw_addr` with the MAC connections of devices that belong to existing `unifi` entries would work without `ip_info`. It relates to uilibs/unifi-discovery#158, which proposes exposing the announced addresses; that cannot help when none arrive.\n\nWorkaround in use: ignoring the discovery (`config_entries/ignore_flow`).\n\n### What version of Home Assistant Core has the issue?\n\ncore-2026.10.0\n\n### What was the last working version of Home Assistant Core?\n\n_No response_\n\n### What type of installation are you running?\n\nHome Assistant OS\n\n### Integration causing the issue\n\nUniFi Network\n\n### Link to integration documentation on our website\n\nhttps://www.home-assistant.io/integrations/unifi/\n\n### Diagnostics information\n\n_No response_\n\n### Example YAML snippet\n\n_No response_\n\n### Anything in the logs that might be useful for us?\n\n```txt\n[homeassistant.components.unifi_discovery.discovery] Found devices: [UnifiDevice(source_ip='192.168.80.1', hw_addr='<console MAC>', ip_info=None, addr_entry=None, fw_version=None, mac_address=None, ..., platform='UDMPROMAX', model=None, ..., signature_version=None, services=mappingproxy({<UnifiService.Protect: 1>: True, <UnifiService.Network: 2>: True, <UnifiService.Access: 3>: False}), direct_connect_domain='<redacted>', device_id='<redacted>', guid='<redacted>', primary_addr=None, is_managed=None, ..., product_name=None, version=None, echoed=True)]\n```\n\nFields shown as `...` and identifiers shown in angle brackets were removed by me; the other values are as logged.\n\n### Additional information\n\nUniFi Network application 10.6.106 as of 2026-09-27, UDM Pro Max. Related: #177083, #180343, uilibs/unifi-discovery#158.\n",
     "created_at": "2026-10-09T18:06:11Z",
     "author": "picosam",
     "random_seed_note": "Sampled 30 tickets with fixed seed (random_state=42) from the holdout window strictly after the champion models' training cutoff (2026-08-27T05:00:47Z) up to 2026-10-26T06:15:50Z. None of these tickets were used for model fitting or hyperparameter tuning.",
@@ -1325,8 +1325,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.387,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1352,8 +1352,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.769,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1379,8 +1379,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.764,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1406,14 +1406,14 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.614,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
     "number": 186551,
     "title": "Kia Uvo",
-    "body": "### The problem\n\nWhen i enter the login details for Kia connect  it keeps giving me the error, I have tried logging out of the app on my phone and re-entering it but it makes no difference \n\n### What version of Home Assistant Core has the issue?\n\n2026.10.1\n\n### What was the last working version of Home Assistant Core?\n\n_No response_\n\n### What type of installation are you running?\n\nHome Assistant OS\n\n### Integration causing the issue\n\nHyundai-Kia-Connect/\n\n### Link to integration documentation on our website\n\n_No response_\n\n### Diagnostics information\n\nLogger: homeassistant.config_entries\nSource: config_entries.py:782\nFirst occurred: 23:00:41 (1 occurrence)\nLast logged: 23:00:41\n\nConfig entry 'Kia Europe user@example.com' for kia_uvo integration could not authenticate: CCI token exchange failed: HTTP 400 \u2014 {\"code\":9035,\"message\":\"Unusual activity has been detected so youve been logged out. Please restart the app.\",\"errors\":[]}. This may indicate a Hyundai API change.\n\n### Example YAML snippet\n\n```yaml\n\n```\n\n### Anything in the logs that might be useful for us?\n\n```txt\nhomeassistant.config_entries\n\nconfig_entries.py:782\n\nConfig entry 'Kia Europe user@example.com' for kia_uvo integration could not authenticate: CCI token exchange failed: HTTP 400 \u2014 {\"code\":9035,\"message\":\"Unusual activity has been detected so youve been logged out. Please restart the app.\",\"errors\":[]}. This may indicate a Hyundai API change.\n```\n\n### Additional information\n\n_No response_",
+    "body": "### The problem\n\nWhen i enter the login details for Kia connect  it keeps giving me the error, I have tried logging out of the app on my phone and re-entering it but it makes no difference \n\n### What version of Home Assistant Core has the issue?\n\n2026.10.1\n\n### What was the last working version of Home Assistant Core?\n\n_No response_\n\n### What type of installation are you running?\n\nHome Assistant OS\n\n### Integration causing the issue\n\nHyundai-Kia-Connect/\n\n### Link to integration documentation on our website\n\n_No response_\n\n### Diagnostics information\n\nLogger: homeassistant.config_entries\nSource: config_entries.py:782\nFirst occurred: 23:00:41 (1 occurrence)\nLast logged: 23:00:41\n\nConfig entry 'Kia Europe mlbolg1957@gmail.com' for kia_uvo integration could not authenticate: CCI token exchange failed: HTTP 400 \u2014 {\"code\":9035,\"message\":\"Unusual activity has been detected so youve been logged out. Please restart the app.\",\"errors\":[]}. This may indicate a Hyundai API change.\n\n### Example YAML snippet\n\n```yaml\n\n```\n\n### Anything in the logs that might be useful for us?\n\n```txt\nhomeassistant.config_entries\n\nconfig_entries.py:782\n\nConfig entry 'Kia Europe mlbolg1957@gmail.com' for kia_uvo integration could not authenticate: CCI token exchange failed: HTTP 400 \u2014 {\"code\":9035,\"message\":\"Unusual activity has been detected so youve been logged out. Please restart the app.\",\"errors\":[]}. This may indicate a Hyundai API change.\n```\n\n### Additional information\n\n_No response_",
     "created_at": "2026-10-14T22:48:05Z",
     "author": "Mickey1957",
     "random_seed_note": "Sampled 30 tickets with fixed seed (random_state=42) from the holdout window strictly after the champion models' training cutoff (2026-08-27T05:00:47Z) up to 2026-10-26T06:15:50Z. None of these tickets were used for model fitting or hyperparameter tuning.",
@@ -1433,8 +1433,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.661,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1460,8 +1460,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.68,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1487,8 +1487,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.457,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1514,8 +1514,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.696,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1541,8 +1541,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": false,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.122,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   },
   {
@@ -1570,8 +1570,8 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
       "rule_flagged": true,
       "survival_latency_status": "no reliable signal for resolution time",
       "not_planned_risk_probability": 0.693,
-      "not_planned_baseline": 0.163,
-      "out_of_sample_prauc": 0.201
+      "not_planned_baseline": 0.145,
+      "out_of_sample_prauc": 0.195
     }
   }
 ];
@@ -1795,13 +1795,13 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
             let analysis = "";
             const integMatch = (p.predicted_integration.toLowerCase() === a.actual_integration.toLowerCase());
             if (integMatch) {
-                analysis += `✅ <strong>Component Routing Success</strong>: Model predicted <code>${p.predicted_integration}</code>, matching the maintainer's ground-truth label (Out-of-sample Top-1 Accuracy: 80.0%, Macro-F1: 0.6443 across 26 classes).<br>`;
+                analysis += `✅ <strong>Component Routing Success</strong>: Model predicted <code>${p.predicted_integration}</code>, matching the maintainer's ground-truth label (Out-of-sample Top-1 Accuracy: 80.0% vs always-"other" 76.72%, Top-3: 97.16%, Macro-F1: 0.644 across 26 classes).<br>`;
             } else {
                 analysis += `ℹ️ <strong>Component Routing Nuance</strong>: Model predicted <code>${p.predicted_integration}</code> while label was <code>${a.actual_integration}</code>.<br>`;
             }
 
             if (a.state_reason === 'not_planned') {
-                analysis += `🔍 <strong>Not-Planned Life Cycle</strong>: Ticket was closed as not planned after ${a.actual_days_to_close} days. Model predicted not-planned risk probability was ${p.not_planned_risk_probability} (Prevalence baseline: 0.163, Out-of-sample PR-AUC: 0.201).<br>`;
+                analysis += `🔍 <strong>Not-Planned Life Cycle</strong>: Ticket was closed as not planned after ${a.actual_days_to_close} days. Model predicted not-planned risk probability was ${p.not_planned_risk_probability} (Test prevalence: 0.145, Out-of-sample PR-AUC: 0.195, ROC-AUC: 0.610).<br>`;
             } else if (a.state === 'closed') {
                 analysis += `🛠️ <strong>Resolved with Fix</strong>: Closed in ${a.actual_days_to_close} days with maintainer patch.<br>`;
             } else {

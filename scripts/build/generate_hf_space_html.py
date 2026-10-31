@@ -530,7 +530,7 @@ def build_index_html():
                                 <div class="kpi-title">Not-Planned Risk (p)</div>
                                 <div class="kpi-value" id="pred-risk">-</div>
                                 <div class="kpi-badge" id="pred-risk-badge">-</div>
-                                <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.3rem;">Prevalence baseline: 0.163 | Out-of-sample PR-AUC: 0.201</div>
+                                <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.3rem;">Test prevalence: 0.145 | Out-of-sample PR-AUC: 0.195 (ROC-AUC: 0.610)</div>
                             </div>
                         </div>
 
@@ -597,28 +597,28 @@ def build_index_html():
 
                 <div class="kpi-grid">
                     <div class="kpi-card">
-                        <div class="kpi-title">Survival C-Index (Validation)</div>
-                        <div class="kpi-value" style="color:var(--cyan);">0.5426</div>
-                        <div class="kpi-badge" style="background:rgba(56,189,248,0.12); color:var(--cyan);">Validation Split (Tuning, N=786)</div>
-                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">Out-of-sample: 0.514 [0.492, 0.536] (Crosses chance 0.50, negative result)</div>
+                        <div class="kpi-title">Survival C-Index (Out-of-Sample)</div>
+                        <div class="kpi-value" style="color:var(--cyan);">0.514</div>
+                        <div class="kpi-badge" style="background:rgba(56,189,248,0.12); color:var(--cyan);">95% CI: [0.492, 0.536] (Chance 0.50)</div>
+                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">Out-of-sample C-index 0.514; validation (tuning) was 0.5426. Negative result.</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-title">Not-Planned PR-AUC (Validation)</div>
-                        <div class="kpi-value" style="color:var(--emerald);">0.222</div>
-                        <div class="kpi-badge" style="background:rgba(16,185,129,0.12); color:var(--emerald);">Validation Split (Tuning, N=411)</div>
-                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">Out-of-sample: 0.201 (N=301) vs prevalence baseline 0.163</div>
+                        <div class="kpi-title">Not-Planned PR-AUC (Out-of-Sample)</div>
+                        <div class="kpi-value" style="color:var(--emerald);">0.195</div>
+                        <div class="kpi-badge" style="background:rgba(16,185,129,0.12); color:var(--emerald);">ROC-AUC: 0.610 | Prevalence: 0.145</div>
+                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">Strictly out-of-sample test; validation (tuning) PR-AUC was 0.222</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-title">Empirical Brier Score (Validation)</div>
-                        <div class="kpi-value" style="color:#A78BFA;">0.1997</div>
-                        <div class="kpi-badge" style="background:rgba(167,139,250,0.12); color:#A78BFA;">Validation Split (Tuning, N=411)</div>
-                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">Out-of-sample: 0.2052 on 16.3% ground truth</div>
+                        <div class="kpi-title">Empirical Brier Score (Out-of-Sample)</div>
+                        <div class="kpi-value" style="color:#A78BFA;">0.1681</div>
+                        <div class="kpi-badge" style="background:rgba(167,139,250,0.12); color:#A78BFA;">Test Split (N=496 closed)</div>
+                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">Out-of-sample: 0.1681 on 14.5% ground truth; validation (tuning): 0.1997</div>
                     </div>
                     <div class="kpi-card">
                         <div class="kpi-title">Label Recommender Top-1 (Out-of-Sample)</div>
                         <div class="kpi-value" style="color:var(--emerald);">80.0%</div>
-                        <div class="kpi-badge" style="background:rgba(16,185,129,0.12); color:var(--emerald);">Macro-F1: 0.6443</div>
-                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">Top-3 Accuracy: 97.2% across 26 classes (Validation: 86.6% Top-1, 0.8316 Macro-F1)</div>
+                        <div class="kpi-badge" style="background:rgba(16,185,129,0.12); color:var(--emerald);">Macro-F1: 0.644 | Top-3: 97.16%</div>
+                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.35rem;">vs always-"other" baseline 76.72% (Validation (tuning): 86.6% Top-1, 0.832 Macro-F1)</div>
                     </div>
                 </div>
 
@@ -953,13 +953,13 @@ LangGraph Triage Agent + FastAPI Gateway (Langfuse Tracing)
             let analysis = "";
             const integMatch = (p.predicted_integration.toLowerCase() === a.actual_integration.toLowerCase());
             if (integMatch) {{
-                analysis += `✅ <strong>Component Routing Success</strong>: Model predicted <code>${{p.predicted_integration}}</code>, matching the maintainer's ground-truth label (Out-of-sample Top-1 Accuracy: 80.0%, Macro-F1: 0.6443 across 26 classes).<br>`;
+                analysis += `✅ <strong>Component Routing Success</strong>: Model predicted <code>${{p.predicted_integration}}</code>, matching the maintainer's ground-truth label (Out-of-sample Top-1 Accuracy: 80.0% vs always-"other" 76.72%, Top-3: 97.16%, Macro-F1: 0.644 across 26 classes).<br>`;
             }} else {{
                 analysis += `ℹ️ <strong>Component Routing Nuance</strong>: Model predicted <code>${{p.predicted_integration}}</code> while label was <code>${{a.actual_integration}}</code>.<br>`;
             }}
 
             if (a.state_reason === 'not_planned') {{
-                analysis += `🔍 <strong>Not-Planned Life Cycle</strong>: Ticket was closed as not planned after ${{a.actual_days_to_close}} days. Model predicted not-planned risk probability was ${{p.not_planned_risk_probability}} (Prevalence baseline: 0.163, Out-of-sample PR-AUC: 0.201).<br>`;
+                analysis += `🔍 <strong>Not-Planned Life Cycle</strong>: Ticket was closed as not planned after ${{a.actual_days_to_close}} days. Model predicted not-planned risk probability was ${{p.not_planned_risk_probability}} (Test prevalence: 0.145, Out-of-sample PR-AUC: 0.195, ROC-AUC: 0.610).<br>`;
             }} else if (a.state === 'closed') {{
                 analysis += `🛠️ <strong>Resolved with Fix</strong>: Closed in ${{a.actual_days_to_close}} days with maintainer patch.<br>`;
             }} else {{

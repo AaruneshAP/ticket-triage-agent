@@ -135,29 +135,20 @@ Every visual below is a verified reference artifact generated from live services
 *Interactive review queue with real Databricks Serverless write-back, SHAP feature attributions, and candidate duplicate cards.*  
 ![Streamlit Review Queue](docs/images/streamlit_review_app.png)
 
-### 2. High-Risk Alert Routing (n8n in Docker)
-*Automated webhook pipeline routing high-risk tickets to maintainer Telegram channels.*  
-![n8n Workflow Canvas](docs/images/n8n_workflow_canvas.png)
-*Alert routing workflow defined in `n8n/workflows/triage_alerts.json` with webhook triggers and threshold filtering.*
-
-### 3. Orchestration Pipeline (Apache Airflow 2.9)
+### 2. Orchestration Pipeline (Apache Airflow 2.9)
 *Hourly idempotent DAG executing ingest, Databricks dbt build, agent scoring, drift checks, and BI exports.*  
 ![Airflow DAG Graph](docs/images/airflow_dag_graph.png)
-*End-to-end orchestration DAG defined in `airflow/dags/triage_hourly.py` running in Docker LocalExecutor with all 7 tasks verified green: `incremental_ingest` → `load_raw` → `dbt_build` → `score_new_tickets` → `drift_check` → `write_monitoring` → `export_bi`.*
+*The graph view shows selected successful run `scheduled__2026-10-29T11:00:00+00:00` with all 7 tasks green (`incremental_ingest` → `load_raw` → `dbt_build` → `score_new_tickets` → `drift_check` → `write_monitoring` → `export_bi`). Earlier historical runs on the grid view include failures caused by initial container dependency configuration (`ModuleNotFoundError: No module named 'joblib'`) and task execution timeouts (`SIGTERM`).*
 
-### 4. Experiment Tracking (MLflow on port 5000)
-*Candidate vs champion metric comparisons with time-split holdout validation.*  
-![MLflow Experiments](docs/images/mlflow_experiments.png)
-
-### 5. Statistical Distribution Drift Plots
-*Empirical feature shift comparison between baseline reference and current evaluation distributions.*  
+### 3. Statistical Distribution Drift Plots
+*Synthetic shift demonstration comparing baseline reference vs simulated post-release feature distributions to evaluate PSI alerting triggers.*  
 ![Drift Comparison](docs/images/drift_distribution_comparison.png)
 
-### 6. Resolution Latency & Survival Diagnostics
+### 4. Resolution Latency & Survival Diagnostics
 *Days to close empirical distribution, right-censoring rates, and bot vs human resolution times.*  
 ![Days to Close Diagnostics](docs/images/days_to_close_diagnostics.png)
 
-### 7. GitHub Sandbox Bot & Strict Allow-List Enforcement
+### 5. GitHub Sandbox Bot & Strict Allow-List Enforcement
 *Isolated triage execution in [AaruneshAP/ticket-triage-sandbox](https://github.com/AaruneshAP/ticket-triage-sandbox) enforced by HTTP-layer repository allow-list guards.*
 - **Strict Allow-List Security Guard**: Implemented in `src/triage/agent/sandbox_guard.py` and `src/triage/bot/sandbox_bot.py`. Any attempt to post, label, or modify an issue outside the designated sandbox repository strictly raises `StrictAllowlistViolation` and aborts before network transmission.
 - **Resolution Time Leakage Blocker**: Automated comments are scanned with `RESOLUTION_TIME_REGEX` before posting; any draft mentioning resolution duration or speed raises `ResolutionLeakageError` and is blocked.

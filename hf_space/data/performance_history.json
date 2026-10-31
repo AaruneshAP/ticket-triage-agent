@@ -88,10 +88,23 @@
     }
   ],
   "production_baselines": {
-    "survival_c_index": 0.5426,
-    "not_planned_pr_auc": 0.2222,
-    "not_planned_brier": 0.1997,
-    "label_accuracy": 0.8
+    "survival_c_index": 0.514,
+    "survival_c_index_ci": [
+      0.492,
+      0.536
+    ],
+    "survival_c_index_validation_tuning": 0.5426,
+    "not_planned_pr_auc": 0.195,
+    "not_planned_roc_auc": 0.6098,
+    "not_planned_test_prevalence": 0.1452,
+    "not_planned_pr_auc_validation_tuning": 0.2222,
+    "not_planned_brier": 0.1681,
+    "not_planned_brier_validation_tuning": 0.1997,
+    "label_accuracy": 0.8,
+    "label_always_other_baseline": 0.7672,
+    "label_top_3": 0.9716,
+    "label_macro_f1": 0.6443,
+    "label_accuracy_validation_tuning": 0.8655
   },
   "performance_alerts": [],
   "has_performance_alert": false
