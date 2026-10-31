@@ -110,6 +110,8 @@ def load_cached_issues() -> pd.DataFrame:
     """Load ingested issues."""
     if os.path.exists(ISSUES_PATH):
         df = pd.read_parquet(ISSUES_PATH)
+        if "ticket_number" not in df.columns and "number" in df.columns:
+            df["ticket_number"] = df["number"]
         return df
     return pd.DataFrame()
 
@@ -118,7 +120,10 @@ def load_cached_issues() -> pd.DataFrame:
 def load_cached_features() -> pd.DataFrame:
     """Load precomputed features matrix."""
     if os.path.exists(FEATURES_PATH):
-        return pd.read_parquet(FEATURES_PATH)
+        df = pd.read_parquet(FEATURES_PATH)
+        if "ticket_number" not in df.columns and "number" in df.columns:
+            df["ticket_number"] = df["number"]
+        return df
     return pd.DataFrame()
 
 
@@ -208,7 +213,7 @@ with tab_queue:
         st.warning("No issue data found. Run `python scripts/ingestion/ingest_issues.py` to populate data.")
     else:
         # Filter controls
-        st.subheader("Inbound Issues Review Queue")
+        st.subheader("Inbound Issues Pending Review")
 
         col_f1, col_f2, col_f3 = st.columns([2, 2, 2])
         with col_f1:
@@ -341,7 +346,7 @@ with tab_queue:
                     <div class="metric-card">
                         <small style="color: #90caf9; text-transform: uppercase; font-weight: 600;">Recommended Component Label</small>
                         <div style="font-size: 1.3rem; font-weight: 700; margin: 4px 0;">🏷️ {sug_label}</div>
-                        <small>Confidence: <b>{conf * 100:.1f}%</b> (Model Macro-F1: 0.5513)</small>
+                        <small>Confidence: <b>{conf * 100:.1f}%</b> (Out-of-sample Macro-F1: 0.644)</small>
                     </div>
                     """,
                     unsafe_allow_html=True,
@@ -361,7 +366,7 @@ with tab_queue:
                     <div class="metric-card">
                         <small style="color: #ef9a9a; text-transform: uppercase; font-weight: 600;">Closed Without Fix Risk</small>
                         <div style="font-size: 1.3rem; font-weight: 700; margin: 4px 0;">⚠️ {p_risk * 100:.1f}% {badge_html}</div>
-                        <small>Model PR-AUC: <b>0.222</b> (Baseline prevalence: 0.163)</small>
+                        <small>Out-of-sample PR-AUC: <b>0.195</b> (ROC-AUC: 0.610 vs test prevalence: 0.145)</small>
                     </div>
                     """,
                     unsafe_allow_html=True,
@@ -603,13 +608,13 @@ with tab_health:
             """
             | Subsystem | Metric | Baseline | Measured Model | Signal Strength |
             |---|---|---|---|---|
-            | **Label Recommender** | Top-1 Accuracy | 12.5% | **70.0%** | 🟢 **Strong** |
-            | **Label Recommender** | Top-3 Accuracy | 31.0% | **90.9%** | 🟢 **Strong** |
-            | **Not-Planned Risk** | PR-AUC | 0.163 | **0.222** (+36.1%) | 🟡 **Moderate** |
-            | **Fixed Horizon <= 14d**| PR-AUC | 0.358 | **0.395** (+10.3%) | 🟡 **Moderate** |
-            | **Fixed Horizon <= 30d**| PR-AUC | 0.482 | **0.546** (+13.3%) | 🟡 **Moderate** |
-            | **Volume Forecaster** | 4-Wk MAE | 79.75 | **76.86** | 🟡 **Moderate** |
-            | **Survival Time** | C-index | 0.526 | **0.543** | 🔴 **Near Chance** |
+            | **Label Recommender** | Top-1 Accuracy | 76.72% (Always-Other) | **80.0%** (Macro-F1: 0.644) | 🟢 **Strong** |
+            | **Label Recommender** | Top-3 Accuracy | 31.0% | **97.16%** | 🟢 **Strong** |
+            | **Not-Planned Risk** | PR-AUC | 0.145 (Test Prev) | **0.195** (ROC-AUC: 0.610) | 🟡 **Weak, not decision-grade** |
+            | **Fixed Horizon <= 14d**| ROC-AUC | 0.500 | **0.4621** | 🔴 **No reliable signal, suppressed** |
+            | **Fixed Horizon <= 30d**| ROC-AUC | 0.500 | **0.5329** | 🔴 **No reliable signal, suppressed** |
+            | **Volume Forecaster** | 4-Wk MAE | 79.75 | **76.86** | 🟡 **Marginal** |
+            | **Survival Time** | C-index | 0.500 | **0.514** [0.492, 0.536] | 🔴 **Near Chance** |
             """
         )
 

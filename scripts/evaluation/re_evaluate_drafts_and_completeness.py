@@ -499,26 +499,25 @@ All 30 drafts were re-synthesized using the updated triage constraints:
 
 ## 8. Honest Performance Verdicts Across All Models
 
-This table summarizes the final honest conclusions across the entire predictive triage stack:
+This table summarizes the final honest conclusions across the entire predictive triage stack, evaluated strictly on out-of-sample test cohorts:
 
-| Subsystem | Metric | Measured Value | Baseline Comparison | Honest Verdict |
+| Subsystem | Metric | Measured Value (Out-of-Sample Test) | Baseline Comparison | Honest Verdict |
 |---|---|---|---|---|
-| **Integration Label Recommender** | Top-1 Accuracy | **70.0%** | 12.5% (Prevalence) | 🟢 **Strong signal** |
-| | Top-3 Accuracy | **90.86%** | 31.0% (Top-3 Baseline) | 🟢 **Strong signal** |
-| | Macro-F1 | **0.5513** | 0.0820 (Chance) | 🟢 **Strong signal** |
-| **Closed Without Fix Risk** | PR-AUC | **0.2222** | 0.1632 (Prevalence) | 🟡 **Weak-to-Marginal signal** (+36.1% gain) |
-| **Fixed-Horizon (<= 14 Days)** | ROC-AUC | **0.5847** | 0.5000 (Chance) | 🟡 **Weak-to-Marginal signal** |
-| | PR-AUC | **0.3948** | 0.3576 (Prevalence) | 🟡 **Weak-to-Marginal signal** (+10.4% gain) |
-| **Fixed-Horizon (<= 30 Days)** | ROC-AUC | **0.6067** | 0.5000 (Chance) | 🟡 **Weak-to-Marginal signal** |
-| | PR-AUC | **0.5456** | 0.4817 (Prevalence) | 🟡 **Weak-to-Marginal signal** (+13.3% gain) |
-| **Volume Forecaster (Weekly)** | 4-Week MAE | **76.86** | 79.75 (Naive 4-wk average) | 🟡 **Marginal signal** (Beats naive 4-wk by only ~3.6%) |
+| **Integration Label Recommender** | Top-1 Accuracy | **80.0%** | 76.72% (Always-"Other" Baseline) | 🟢 **Strong signal** |
+| | Top-3 Accuracy | **97.16%** | 31.0% (Top-3 Baseline) | 🟢 **Strong signal** |
+| | Macro-F1 | **0.644** | 0.033 (Always-"Other" Baseline) | 🟢 **Strong signal** |
+| **Closed Without Fix (Not-Planned)** | ROC-AUC | **0.610** | 0.5000 (Chance) | 🟡 **Weak, not decision-grade** (Weak ranking signal) |
+| | PR-AUC | **0.195** | 0.145 (Test Prevalence) | 🟡 **Weak, not decision-grade** (Barely above prevalence; 99% CI includes base rate) |
+| **Fixed-Horizon (<= 14 Days)** | ROC-AUC | **0.4621** | 0.5000 (Chance) | 🔴 **No reliable signal, suppressed** (Indistinguishable from chance; 95% CI crosses 0.50) |
+| **Fixed-Horizon (<= 30 Days)** | ROC-AUC | **0.5329** | 0.5000 (Chance) | 🔴 **No reliable signal, suppressed** (Indistinguishable from chance; 95% CI crosses 0.50) |
+| **Volume Forecaster (Weekly)** | 4-Week MAE | **76.86** | 79.75 (Naive 4-wk average) | 🟡 **Marginal signal** (Beats naive 4-wk by ~3.6%) |
 | | Last-Week MAE | **76.86** | 92.75 (Naive last-week) | 🟡 **Moderate vs Lag-1** (Average inflow: 109.0/wk) |
-| **Survival Time-to-Close** | C-index | **0.5425** (95% CI: `[0.518, 0.570]`) | Baseline CI: `[0.495, 0.554]` | 🔴 **Near Chance (Weak)** (Baseline CI includes 0.50) |
-| **Duplicate Retrieval** | Recall@5 | **3 of 3 pairs (n=3 pairs)** | Random retrieval: < 1% | ℹ️ **Small Sample** (Parent retrieved, N=3 pairs) |
+| **Survival Time-to-Close** | C-index | **0.514** (95% CI: `[0.492, 0.536]`) | 0.5000 (Chance) / Baseline CI: `[0.495, 0.554]` | 🔴 **Indistinguishable from chance** (Negative result; resolution latency suppressed across all interfaces) |
+| **Duplicate Retrieval** | Recall@5 | **3 of 3 pairs (n=3 pairs)** | < 1% (Random Retrieval) | ℹ️ **Small Sample** (Verified parent duplicates) |
 
 ### Key Architectural Takeaways:
-1. **Component Classification has strong text signal**: Bug titles and stack traces contain unambiguous integration signatures that enable 70.0% Top-1 accuracy without target leakage.
-2. **Resolution Speed cannot be reliably predicted from issue text (the cause was not investigated)**: Both the survival AFT model and fixed-horizon binary classifiers operate near chance ($\sim 0.54$ C-index, $\sim 0.46-0.53$ out-of-sample ROC-AUC). Raw unbounded survival AFT extrapolate tails ($>200$ days) are unphysical and dropped. The API, Streamlit UI, LangGraph agent, and HuggingFace Space explicitly suppress all resolution latency predictions.
+1. **Component Classification has strong text signal**: Bug titles and stack traces contain unambiguous integration signatures that enable 80.0% Top-1 accuracy and 0.644 Macro-F1 (vs 76.72% Top-1 and 0.033 Macro-F1 always-"other" baseline) without target leakage.
+2. **Resolution Speed cannot be reliably predicted from issue text (the cause was not investigated)**: Both the survival AFT model and fixed-horizon binary classifiers operate near chance ($0.514$ C-index, $0.4621$ / $0.5329$ out-of-sample ROC-AUC). Raw unbounded survival AFT extrapolate tails ($>200$ days) are unphysical and dropped. The API, Streamlit UI, LangGraph agent, and HuggingFace Space explicitly suppress all resolution latency predictions.
 3. **Volume Forecasting yields marginal gains over simple moving averages**: The Holt-Winters ETS model achieves an MAE of 76.86 on a 109 tickets/week inflow, beating the naive 4-week average (79.75) by only 3.6%.
 """
 

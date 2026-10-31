@@ -244,6 +244,22 @@ def run_score_new_tickets(**context):
     surv_model = joblib.load(surv_path) if os.path.exists(surv_path) else None
     np_model = joblib.load(np_path) if os.path.exists(np_path) else None
     labeler_model = joblib.load(lbl_path) if os.path.exists(lbl_path) else None
+    # Load fallback base rate for not-planned risk from saved test results
+    fallback_p_np = 0.145
+    results_candidates = [
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs", "results", "not_planned.json"),
+        os.path.join("docs", "results", "not_planned.json"),
+        "/opt/airflow/docs/results/not_planned.json",
+    ]
+    for r_cand in results_candidates:
+        if os.path.exists(r_cand):
+            try:
+                with open(r_cand, "r", encoding="utf-8") as rf:
+                    res_json = json.load(rf)
+                    fallback_p_np = round(float(res_json.get("test_metrics_strictly_out_of_sample", {}).get("prevalence", 0.145)), 3)
+                break
+            except Exception:
+                pass
 
     if not os.path.exists(p_path):
         logger.warning(f"Issues dataset not found at {p_path}; scoring 0 tickets.")
@@ -315,7 +331,7 @@ def run_score_new_tickets(**context):
                 logger.debug(f"Survival scoring notice: {e}")
 
         # 3. Not-planned risk classifier
-        p_np_val = 0.163
+        p_np_val = fallback_p_np
         shap_exps = []
         if np_model is not None:
             try:

@@ -429,8 +429,8 @@ To remove boundary distortion from partial ingestion weeks, the first and last i
 
 | Task / Model | Genuine Signal? | Primary Drivers & Reality |
 |---|---|---|
-| **Integration Label Fallback** | **STRONG SIGNAL** (`Top-1 = 70.0%`, `Top-3 = 90.9%`, `Macro-F1 = 0.55`) | Ticket text contains device names (`ESP32`, `Zigbee`, `Shelly`), integration vocabulary, and protocol references that uniquely identify integrations even when the form field is empty. |
-| **Closed Without Fix / Not-Planned Risk** | **MODERATE SIGNAL** (`PR-AUC = 0.222` vs `0.163` baseline) | Missing form fields, absence of traceback, and terse hand-written descriptions correlate with issues closed as duplicates or non-actionable bugs. |
+| **Integration Label Fallback** | **STRONG SIGNAL** (`Top-1 = 80.0%`, `Top-3 = 97.2%`, `Macro-F1 = 0.644`) | Ticket text contains device names (`ESP32`, `Zigbee`, `Shelly`), integration vocabulary, and protocol references that uniquely identify integrations even when the form field is empty. |
+| **Closed Without Fix / Not-Planned Risk** | **WEAK SIGNAL (NOT DECISION-GRADE)** (`PR-AUC = 0.195` vs `0.145` test prevalence, `ROC-AUC = 0.610`) | Missing form fields, absence of traceback, and terse hand-written descriptions correlate with issues closed as duplicates or non-actionable bugs. |
 | **Weekly Volume Forecasting** | **MODERATE SIGNAL** (`MAE = {volume_stats["ets_mae"]:.1f}`) | Weekly issue arrivals exhibit seasonal consistency around ~110-120 tickets/week with slight release-cycle spikes. |
 | **Time-to-Close Survival AFT** | **NO RELIABLE SIGNAL** (`C-Index 95% CI includes 0.50`) | Duration models show no out-of-sample signal; the cause was not investigated. Duration and closure probability metrics are suppressed from production display. |
 """

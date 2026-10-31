@@ -112,9 +112,9 @@ ci_95 = (np.percentile(boot_c, 2.5), np.percentile(boot_c, 97.5))
 
 #### Top-1 Accuracy Reconciliation Across Splits & Populations
 
-| Figure | Class Count | Population | Split | Evaluation Status |
+| Figure | Class Count | Population | Split (Validation (Tuning) / Test) | Evaluation Status |
 |---|---|---|---|---|
-| **70.0% Top-1** | 125 | Unpruned raw components in validation | Validation Split ($N=786$) | Exploratory EDA benchmark on all unpruned raw integration strings |
+| **70.0% Top-1** | 125 | Unpruned raw components in validation | Validation (Tuning) Split ($N=786$) | Exploratory EDA benchmark on all unpruned raw integration strings |
 | **71.3% Top-1** | 26 | Closed tickets across rolling monitoring windows | Rolling Monitoring Cohort (2026-09-28 to 2026-10-12, $N=352$) | Rolling production monitoring cohort |
 | **58.3% Top-1** | 26 | Labeled tickets in test split (Initial Champion on initial train split $N=976$) | Strictly Out-of-Sample Test ($N=915$) | Retraining demonstration initial champion baseline (`fct_retrain_decisions`) |
 | **80.0% Top-1** | 26 | Labeled tickets in test split (Promoted Candidate on grown split $N=1,762$) | Strictly Out-of-Sample Test ($N=915$) | Headline out-of-sample benchmark & promoted candidate (`fct_retrain_decisions`, 95% CI: `[77.60%, 82.62%]`) |
@@ -236,15 +236,16 @@ A focused diagnostic pass was conducted strictly on training and validation spli
 
 ---
 
-### 6.4 Fixed-Horizon Binary Classification
-Rather than estimating exact continuous time to close, predicting binary closure within fixed operational windows (evaluated only on tickets created with sufficient observation horizon) yielded:
+### 6.4 Fixed-Horizon Binary Classification (Validation (Tuning) Split)
+Rather than estimating exact continuous time to close, predicting binary closure within fixed operational windows evaluated on the offline validation (tuning) split yielded:
 
-| Target Horizon | Eligible Population | Prevalence Baseline (PR-AUC) | Model PR-AUC | ROC-AUC | PR Gain |
+| Target Horizon | Eligible Population | Prevalence Baseline (PR-AUC) | Model PR-AUC (Validation (Tuning)) | ROC-AUC (Validation (Tuning)) | PR Gain |
 |---|---|---|---|---|---|
 | **Closed <= 14 Days** | 2338 tickets | 0.3576 | **0.3948** | **0.5456** | **+0.0372** |
 | **Closed <= 30 Days** | 1762 tickets | 0.4817 | **0.5456** | **0.5724** | **+0.0639** |
 
-> Fixed-horizon classification exhibits modest real signal (PR-AUC gain +0.0372 over baseline), showing that whether an issue resolves quickly (within 14 days) is more predictable than exact multi-month survival curves.
+> [!NOTE]
+> **Validation (Tuning) Split Diagnostics**: The table above reflects exploratory offline validation (tuning) split metrics. As documented in Section 9, strictly out-of-sample evaluation on post-cutoff holdout cohorts confirms that discrimination drops to near chance (out-of-sample ROC-AUC 0.4621 on 14-day, 0.5329 on 30-day; both confidence intervals cross 0.50), proving no reliable resolution speed signal exists.
 
 ---
 
@@ -505,26 +506,25 @@ All 30 drafts were re-synthesized using the updated triage constraints:
 
 ## 8. Honest Performance Verdicts Across All Models
 
-This table summarizes the final honest conclusions across the entire predictive triage stack:
+This table summarizes the final honest conclusions across the entire predictive triage stack, evaluated strictly on out-of-sample test cohorts:
 
-| Subsystem | Metric | Measured Value | Baseline Comparison | Honest Verdict |
+| Subsystem | Metric | Measured Value (Out-of-Sample Test) | Baseline Comparison | Honest Verdict |
 |---|---|---|---|---|
-| **Integration Label Recommender** | Top-1 Accuracy | **70.0%** | 12.5% (Prevalence) | 🟢 **Strong signal** |
-| | Top-3 Accuracy | **90.86%** | 31.0% (Top-3 Baseline) | 🟢 **Strong signal** |
-| | Macro-F1 | **0.5513** | 0.0820 (Chance) | 🟢 **Strong signal** |
-| **Closed Without Fix Risk** | PR-AUC | **0.2222** | 0.1632 (Prevalence) | 🟡 **Weak-to-Marginal signal** (+36.1% gain) |
-| **Fixed-Horizon (<= 14 Days)** | ROC-AUC | **0.5847** | 0.5000 (Chance) | 🟡 **Weak-to-Marginal signal** |
-| | PR-AUC | **0.3948** | 0.3576 (Prevalence) | 🟡 **Weak-to-Marginal signal** (+10.4% gain) |
-| **Fixed-Horizon (<= 30 Days)** | ROC-AUC | **0.6067** | 0.5000 (Chance) | 🟡 **Weak-to-Marginal signal** |
-| | PR-AUC | **0.5456** | 0.4817 (Prevalence) | 🟡 **Weak-to-Marginal signal** (+13.3% gain) |
-| **Volume Forecaster (Weekly)** | 4-Week MAE | **76.86** | 79.75 (Naive 4-wk average) | 🟡 **Marginal signal** (Beats naive 4-wk by only ~3.6%) |
+| **Integration Label Recommender** | Top-1 Accuracy | **80.0%** | 76.72% (Always-"Other" Baseline) | 🟢 **Strong signal** |
+| | Top-3 Accuracy | **97.16%** | 31.0% (Top-3 Baseline) | 🟢 **Strong signal** |
+| | Macro-F1 | **0.644** | 0.033 (Always-"Other" Baseline) | 🟢 **Strong signal** |
+| **Closed Without Fix (Not-Planned)** | ROC-AUC | **0.610** | 0.5000 (Chance) | 🟡 **Weak, not decision-grade** (Weak ranking signal) |
+| | PR-AUC | **0.195** | 0.145 (Test Prevalence) | 🟡 **Weak, not decision-grade** (Barely above prevalence; 99% CI includes base rate) |
+| **Fixed-Horizon (<= 14 Days)** | ROC-AUC | **0.4621** | 0.5000 (Chance) | 🔴 **No reliable signal, suppressed** (Indistinguishable from chance; 95% CI crosses 0.50) |
+| **Fixed-Horizon (<= 30 Days)** | ROC-AUC | **0.5329** | 0.5000 (Chance) | 🔴 **No reliable signal, suppressed** (Indistinguishable from chance; 95% CI crosses 0.50) |
+| **Volume Forecaster (Weekly)** | 4-Week MAE | **76.86** | 79.75 (Naive 4-wk average) | 🟡 **Marginal signal** (Beats naive 4-wk by ~3.6%) |
 | | Last-Week MAE | **76.86** | 92.75 (Naive last-week) | 🟡 **Moderate vs Lag-1** (Average inflow: 109.0/wk) |
-| **Survival Time-to-Close** | C-index | **0.5425** (95% CI: `[0.518, 0.570]`) | Baseline CI: `[0.495, 0.554]` | 🔴 **Near Chance (Weak)** (Baseline CI includes 0.50) |
-| **Duplicate Retrieval** | Recall@5 | **3 of 3 pairs (n=3 pairs)** | Random retrieval: < 1% | ℹ️ **Small Sample** (Parent retrieved, N=3 pairs) |
+| **Survival Time-to-Close** | C-index | **0.514** (95% CI: `[0.492, 0.536]`) | 0.5000 (Chance) / Baseline CI: `[0.495, 0.554]` | 🔴 **Indistinguishable from chance** (Negative result; resolution latency suppressed across all interfaces) |
+| **Duplicate Retrieval** | Recall@5 | **3 of 3 pairs (n=3 pairs)** | < 1% (Random Retrieval) | ℹ️ **Small Sample** (Verified parent duplicates) |
 
 ### Key Architectural Takeaways:
-1. **Component Classification has strong text signal**: Bug titles and stack traces contain unambiguous integration signatures that enable 70.0% Top-1 accuracy without target leakage.
-2. **Resolution Speed cannot be reliably predicted from issue text (the cause was not investigated)**: Both the survival AFT model and fixed-horizon binary classifiers operate near chance ($\sim 0.54$ C-index, $\sim 0.46-0.53$ out-of-sample ROC-AUC). Raw unbounded survival AFT extrapolate tails ($>200$ days) are unphysical and dropped. The API, Streamlit UI, LangGraph agent, and HuggingFace Space explicitly suppress all resolution latency predictions.
+1. **Component Classification has strong text signal**: Bug titles and stack traces contain unambiguous integration signatures that enable 80.0% Top-1 accuracy and 0.644 Macro-F1 (vs 76.72% Top-1 and 0.033 Macro-F1 always-"other" baseline) without target leakage.
+2. **Resolution Speed cannot be reliably predicted from issue text (the cause was not investigated)**: Both the survival AFT model and fixed-horizon binary classifiers operate near chance ($0.514$ C-index, $0.4621$ / $0.5329$ out-of-sample ROC-AUC). Raw unbounded survival AFT extrapolate tails ($>200$ days) are unphysical and dropped. The API, Streamlit UI, LangGraph agent, and HuggingFace Space explicitly suppress all resolution latency predictions.
 3. **Volume Forecasting yields marginal gains over simple moving averages**: The Holt-Winters ETS model achieves an MAE of 76.86 on a 109 tickets/week inflow, beating the naive 4-week average (79.75) by only 3.6%.
 
 ---
@@ -548,14 +548,14 @@ Empirical evaluation shows:
 
 ### 9.3 Performance Comparison & Bootstrap Confidence Intervals
 
-| Evaluation Cohort | Horizon | Sample Size ($N$) | Data Provenance | Mean Predicted | Observed Rate | ROC-AUC (95% Bootstrap CI) | PR-AUC (95% Bootstrap CI) |
+| Evaluation Cohort (Validation (Tuning) / Test) | Horizon | Sample Size ($N$) | Data Provenance | Mean Predicted | Observed Rate | ROC-AUC (95% Bootstrap CI) | PR-AUC (95% Bootstrap CI) |
 |---|---|---|---|---|---|---|---|
 | **Full Post-Cutoff Cohort** | 14-Day | 1,362 | 68.1% in-sample / tuning | 0.3216 | 0.4442 | **0.6741** ([0.6430, 0.7050]) | **0.6622** ([0.6240, 0.7024]) |
 | **Strictly Out-of-Sample Test** | 14-Day | 434 | 100% strictly out-of-sample | 0.2552 | 0.5876 | **0.4621** ([0.4051, 0.5190]) | **0.5672** ([0.5079, 0.6369]) |
-| **Offline Validation (Baseline)**| 14-Day | 453 | Tuning split (`vl14`) | 0.2866 | 0.3576 | **0.5847** | **0.3948** (Prev: 0.3576) |
+| **Offline Validation (Tuning Split)**| 14-Day | 453 | Validation (tuning) split (`vl14`) | 0.2866 | 0.3576 | **0.5847** | **0.3948** (Prev: 0.3576) |
 | **Full Post-Cutoff Cohort** | 30-Day | 786 | 73.0% tuning contaminated | 0.3639 | 0.4758 | **0.5619** ([0.5215, 0.6034]) | **0.5255** ([0.4750, 0.5820]) |
 | **Strictly Out-of-Sample Test** | 30-Day | 212 | 100% strictly out-of-sample | 0.3576 | 0.4575 | **0.5329** ([0.4555, 0.6118]) | **0.4798** ([0.3983, 0.5873]) |
-| **Offline Validation (Baseline)**| 30-Day | 575 | Tuning split (`vl30`) | 0.2909 | 0.4817 | **0.6067** | **0.5456** (Prev: 0.4817) |
+| **Offline Validation (Tuning Split)**| 30-Day | 575 | Validation (tuning) split (`vl30`) | 0.2909 | 0.4817 | **0.6067** | **0.5456** (Prev: 0.4817) |
 
 *Root-Cause of Discrepancy*: The elevated ROC-AUC ($0.6741$) on the 1,362 cohort was an artifact of evaluating on data used during model fitting and hyperparameter tuning. When restricted strictly to tickets created *after* the model's last training and tuning dates ($N=434$ and $N=212$), discrimination drops to near chance ($0.4621$ and $0.5329$), with confidence intervals crossing 0.50. This confirms the project's central thesis: resolution speed cannot be predicted reliably from bug issue text alone.
 
