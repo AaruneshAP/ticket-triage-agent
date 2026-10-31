@@ -10,6 +10,7 @@ Features:
 
 import json
 import os
+import re
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -140,11 +141,30 @@ st.sidebar.markdown("**System Health & Readiness**")
 
 db_host = os.getenv("DATABRICKS_HOST")
 if db_host:
-    st.sidebar.success(f"Warehouse: Databricks Serverless\n(`{db_host.split('.')[0]}`)")
+    st.sidebar.success("Warehouse: Databricks Serverless")
 else:
     st.sidebar.warning("Warehouse: Local Fallback (Parquet)")
 
-st.sidebar.info(f"Loaded Tickets: {len(df_issues):,} in corpus")
+_eval_corpus_count = None
+_recon_path = Path("docs/data_reconciliation.md")
+if _recon_path.exists():
+    try:
+        _m = re.search(r"gold\.fct_tickets[^|]*\|\s*\*\*([0-9,]+)\*\*", _recon_path.read_text(encoding="utf-8"))
+        if _m:
+            _eval_corpus_count = _m.group(1)
+    except Exception:
+        pass
+if not _eval_corpus_count and Path("README.md").exists():
+    try:
+        _m = re.search(r"reconciliation across\s+([0-9,]+)\s+issues", Path("README.md").read_text(encoding="utf-8"))
+        if _m:
+            _eval_corpus_count = _m.group(1)
+    except Exception:
+        pass
+if not _eval_corpus_count:
+    _eval_corpus_count = "3,055"
+
+st.sidebar.info(f"Loaded Tickets: {len(df_issues):,} (live)\n\nEvaluation corpus is {_eval_corpus_count}")
 st.sidebar.info(f"Feature Matrix: {len(df_features):,} rows")
 
 st.sidebar.markdown("---")
